@@ -1,0 +1,19 @@
+import React from "react";
+import { getClassesString } from "../../utils";
+
+const Input = React.forwardRef(
+  ({ inputClasses, type = "text", placeholder = "1234", ...props }, ref) => {
+    return (
+      <input
+        className={`border-0 px-3 py-3 placeholder-gray-300 text-gray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring-1 w-full ease-linear transition-all duration-150 ${getClassesString(
+          inputClasses
+        )}`}
+        placeholder={placeholder}
+        {...props}
+        ref={ref}
+      />
+    );
+  }
+);
+
+export default Input;

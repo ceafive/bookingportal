@@ -1,23 +1,38 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEffect } from "react";
+import Spinner from "./components/atoms/Spinner";
+import CreateDelivery from "./components/screens/CreateDelivery";
+import Login from "./components/screens/Login";
+import { useAuth } from "./ctx/Auth";
 
 function App() {
+  const {
+    state: { isLoggedIn, loading, user },
+    actions: { checkAuth },
+  } = useAuth();
+  console.log({ isLoggedIn, loading, user });
+
+  useEffect(() => {
+    checkAuth();
+    return () => {};
+  }, [checkAuth]);
+
+  let ComponentToRender = <div>Hello</div>;
+
+  if (loading) {
+    ComponentToRender = Spinner;
+  }
+
+  if (!loading && !isLoggedIn) {
+    ComponentToRender = Login;
+  }
+
+  if (!loading && isLoggedIn) {
+    ComponentToRender = CreateDelivery;
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="flex flex-col justify-center items-center w-full min-h-screen">
+      <ComponentToRender />
     </div>
   );
 }
