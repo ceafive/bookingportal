@@ -6,8 +6,8 @@ import Header from "../molecules/Header";
 
 const ClosedMessage = () => {
   const {
-    state: { isLoggedIn, loading, user },
-    actions: { checkAuth, logoutUser },
+    state: { user },
+    actions: { logoutUser },
   } = useAuth();
   return (
     <div>

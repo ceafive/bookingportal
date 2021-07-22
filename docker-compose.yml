@@ -1,0 +1,20 @@
+version: "3"
+
+services:
+  api:
+    env_file: "./api/.env"
+    build:
+      context: ./api
+      dockerfile: ./Dockerfile
+    image: "castro/digistore-deliveries-backend"
+    ports:
+      - "5000:5000"
+  frontend:
+    build:
+      context: /
+      dockerfile: ./Dockerfile
+    image: "castro/digistore-deliveries-frontend"
+    ports:
+      - "3001:3001"
+    links:
+      - "api:be"

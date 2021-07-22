@@ -47,7 +47,7 @@ const CreateDelivery = () => {
     },
   });
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append } = useFieldArray({
     control,
     name: "deliveries",
   });
@@ -168,7 +168,7 @@ const CreateDelivery = () => {
       console.log(data);
       // return;
       const { data: resData } = await axios.post("/api/raise-order", data);
-      console.log({ resData });
+      // console.log({ resData });
 
       if (Number(resData?.status) !== 0) {
         toast.error(resData?.message);
@@ -343,6 +343,7 @@ const CreateDelivery = () => {
                         errors={errors}
                         fetching={fetching}
                         setFetching={setFetching}
+                        control={control}
                       />
 
                       {/* {index === fields.length - 1 && (

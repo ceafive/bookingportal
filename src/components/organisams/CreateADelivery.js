@@ -7,6 +7,7 @@ import axios from "axios";
 import { get, isEmpty } from "lodash";
 import toast from "react-hot-toast";
 import tailwind from "tailwind-rn";
+import { Controller } from "react-hook-form";
 
 const CreateADelivery = ({
   index,
@@ -19,6 +20,7 @@ const CreateADelivery = ({
   watch,
   fetching,
   setFetching,
+  control,
 }) => {
   // const {state: {outlets}} =  useApp()
   // const [deliveryInputValue, setDeliveryInputValue] = React.useState("");
@@ -111,8 +113,9 @@ const CreateADelivery = ({
   }, [outletSelected, deliveryInputValue]);
 
   React.useEffect(() => {
-    if (deliveries[index]?.number && !customerData) {
+    if (deliveries[index]?.number) {
       (async () => {
+        setFetching(true);
         const { data } = await axios.post("/api/customer-details", {
           phone: deliveries[index]?.number,
         });
@@ -128,10 +131,7 @@ const CreateADelivery = ({
           setOpenCustomerDiv(false);
           setCustomerData(null);
         }
-        // const dataoutlets = res?.data?.data ?? [];
-
-        // setOutlets(dataoutlets);
-        // setActivePayments(dataactivepayments);
+        setFetching(false);
       })();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -151,24 +151,42 @@ const CreateADelivery = ({
           <Label text="Delivery Location" />
           <div className="flex items-center w-full">
             <div className={`${"w-full"} transition-all duration-150`}>
-              <GooglePlacesAutocomplete
-                selectProps={{
-                  // className: "focus:ring-1",
-                  styles: {
-                    control: (base) => ({
-                      ...base,
-                      ...tailwind("border border-gray-500 py-1"),
-                    }),
-                    placeholder: (base) => ({
-                      ...base,
-                      ...tailwind("text-gray-500"),
-                    }),
+              <Controller
+                control={control}
+                name="deliveryInputValue"
+                rules={{
+                  required: {
+                    value: true,
+                    message: `Delivery location is required`,
                   },
-                  placeholder: "Search for the delivery location",
-                  value: deliveryInputValue,
-                  onChange: (value) => setValue("deliveryInputValue", value),
                 }}
+                render={({ field: { onChange, onBlur, value, ref } }) => (
+                  <GooglePlacesAutocomplete
+                    selectProps={{
+                      // className: "focus:ring-1",
+                      styles: {
+                        control: (base) => ({
+                          ...base,
+                          ...tailwind("border border-gray-500 py-1"),
+                        }),
+                        placeholder: (base) => ({
+                          ...base,
+                          ...tailwind("text-gray-500"),
+                        }),
+                      },
+                      placeholder: "Search for the delivery location",
+                      value: deliveryInputValue,
+                      onChange: (value) =>
+                        setValue("deliveryInputValue", value),
+                    }}
+                  />
+                )}
               />
+              {errors[`deliveryInputValue`] && (
+                <p className="text-xs text-red-500">
+                  {errors?.deliveryInputValue?.message}
+                </p>
+              )}
             </div>
             {fetching && (
               <div className="ml-2">
@@ -216,7 +234,7 @@ const CreateADelivery = ({
           />
 
           {openCustomerDiv && (
-            <div className="flex absolute top-[60px] left-0 h-[100px] w-full border border-gray-500 rounded p-2 bg-gray-100 z-50 overflow-scroll">
+            <div className="flex absolute top-[60px] left-0 h-[100px] w-full border border-gray-500 rounded p-2 bg-gray-100 z-50 overflow-scroll cursor-pointer">
               <p
                 onClick={() => {
                   setValue("customerDetails", customerData);
