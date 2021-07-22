@@ -30,10 +30,10 @@ router.post("/delivery-charge", async function (req, res, next) {
 
 /* GET delivery charge */
 router.post("/coordinates", async function (req, res, next) {
-  const { value } = req.body;
+  const { deliveryInputValue } = req.body;
   try {
     const iPayResponse = await axios.get(
-      `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=%${value.value.description}&inputtype=textquery&fields=geometry&key=AIzaSyCwlbBlciY3kB52y5_h0k4Zxmi8Ho4zK3M`
+      `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=%${deliveryInputValue.value.description}&inputtype=textquery&fields=geometry&key=AIzaSyCwlbBlciY3kB52y5_h0k4Zxmi8Ho4zK3M`
     );
     const iPayData = await iPayResponse.data;
     return res.status(200).json(iPayData);
@@ -48,6 +48,42 @@ router.post("/coordinates", async function (req, res, next) {
     }
     return res.status(400).json(errorResponse);
   }
+});
+
+/* GET active payments */
+router.post("/active-payments", async function (req, res, next) {
+  return await getHandler(req, res, `vendors/payment/services/active`);
+});
+
+/* GET active payments */
+router.post("/transaction-fees", async function (req, res, next) {
+  const { channel, amount, merchant } = req.body;
+  return await getHandler(
+    req,
+    res,
+    `vendors/service/charge/${channel}/${amount}/${merchant}`
+  );
+});
+
+/* GET customer details */
+router.post("/customer-details", async function (req, res, next) {
+  const { phone } = req.body;
+  return await getHandler(req, res, `customers/customer/lookup/${phone}`);
+});
+
+/* POST raise order */
+router.post("/raise-order", async function (req, res, next) {
+  return await postHandler(req, res, `/orders/delivery/process`, req.body);
+});
+
+/* GET verify transaction */
+router.post("/verify-transaction", async function (req, res, next) {
+  const { merchantKey, trxID } = req.body;
+  return await getHandler(
+    req,
+    res,
+    `/paybills/payment/gateway/status/${merchantKey}/${trxID}`
+  );
 });
 
 module.exports = router;

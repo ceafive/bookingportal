@@ -1,5 +1,5 @@
 export const getClassesString = (classes) =>
   (classes ?? "")
     .split(" ")
-    .map((curr) => `!${curr}`)
+    .map((curr) => `${curr}`)
     .join(" ");

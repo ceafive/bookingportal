@@ -19,6 +19,8 @@ const LoginForm = ({
         <div className="w-full mb-3">
           <InputWithLabel
             labelText={"Username"}
+            labelClasses="!capitalize"
+            inputClasses="!pt-2 !p-0 !rounded-none !border-b !border-gray-500 !shadow-none hover:focus:!ring-0"
             {...register("username", {
               required: "Username is required",
             })}
@@ -30,7 +32,9 @@ const LoginForm = ({
 
         <div className="w-full mb-3">
           <InputWithLabel
-            labelText={"PIN"}
+            labelText={"Pin"}
+            labelClasses="!capitalize"
+            inputClasses="!pt-2 !p-0 !rounded-none !border-b !border-gray-500 !shadow-none hover:focus:!ring-0"
             {...register("pin", {
               required: "PIN is required",
               minLength: {
@@ -49,7 +53,7 @@ const LoginForm = ({
         <div className="text-center mt-6">
           {loginError.status && <ErrorMessage text={loginError.message} />}
           <ButtonSpinner
-            btnText="Login"
+            btnText="Sign In"
             processing={processing}
             onClick={handleSubmit(handleUserSignIn)}
             btnClasses={btnClasses}

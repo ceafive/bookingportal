@@ -5,6 +5,7 @@ import { verifyToken } from "../../utils/services";
 import LoginForm from "../organisams/LoginForm";
 import { useAuth } from "../../ctx/Auth";
 import axios from "axios";
+import Logo from "../atoms/Logo";
 
 export default function Login() {
   const {
@@ -64,21 +65,19 @@ export default function Login() {
   };
 
   return (
-    <div
-      className="flex flex-col justify-center items-center min-h-screen w-full"
-      style={{
-        backgroundColor: "#8BC6EC",
-        backgroundImage: `linear-gradient(135deg, #8BC6EC 0%, #9599E2 100%)`,
-      }}
-    >
-      <div className="w-full lg:w-4/12 px-4">
-        <div className="flex flex-col w-full shadow-lg rounded-lg bg-white">
-          <div className="rounded-t px-6 py-6">
-            <div className="text-center mb-3">
-              <h6 className="text-gray-500 text-sm font-bold">Sign in with</h6>
+    <div className="flex flex-col justify-center items-center min-h-screen w-full">
+      <div className="w-full lg:w-4/12 px-2">
+        <div className="flex flex-col w-full">
+          <div className="">
+            <div className="flex justify-center items-center w-full mb-3">
+              <div className="w-48">
+                <Logo className="" />
+              </div>
             </div>
 
-            <hr className="mt-6 border-b-1 border-gray-300" />
+            <p className="text-sm text-gray-700 text-center mb-6 px-6">
+              Welcome back, enter your mobile number or username to continue
+            </p>
           </div>
 
           <LoginForm
@@ -88,7 +87,11 @@ export default function Login() {
             loginError={loginError}
             processing={processing}
             register={register}
-            btnClasses="bg-green-200 lowercase"
+            btnClasses={`${
+              processing
+                ? "bg-gray-300 text-gray-200"
+                : "bg-green-500 text-white"
+            } uppercase !py-2`}
           />
         </div>
       </div>

@@ -1,13 +1,8 @@
 import React from "react";
+import appLogo from "../../assets/digistore_deliveries_logo.png";
 
 const Logo = ({ ...props }) => {
-  return (
-    <img
-      {...props}
-      src="https://sell.digistoreafrica.com/wp-content/uploads/2021/03/DigiStore-Logo-Color.png"
-      alt="logo"
-    />
-  );
+  return <img {...props} src={appLogo} alt="logo" />;
 };
 
 export default Logo;
