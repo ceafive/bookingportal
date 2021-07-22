@@ -26,17 +26,16 @@
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "start": "react-scripts start",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "watch:css": "postcss tailwind.css -o index.css",
-    "watch": "chokidar \"./src/**/*.js\" -c \"npm run watch:css\"",
     "dev": "npm-run-all --parallel dev:*",
     "dev:css": "tailwindcss -i src/tailwind.css -o src/index.css -w",
-    "dev:server": "npm run start",
-    "build": "npm-run-all build:css build:server",
+    "dev:server": "react-scripts start",
+    "build": "npm-run-all build:css build:client build:server",
     "build:css": "tailwindcss -i src/tailwind.css -o src/index.css",
-    "build:server": "react-scripts build"
+    "build:client": "react-scripts build",
+    "build:server": "cd api && npm install",
+    "start": "cd api && npm start"
   },
   "eslintConfig": {
     "extends": [
