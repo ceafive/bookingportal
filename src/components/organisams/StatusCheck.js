@@ -14,12 +14,19 @@ const StatusCheck = ({
   processError,
   reset,
   setStep,
+  append,
 }) => {
   return (
     <div className="text-center px-10">
       <p className="my-4 font-bold">Transaction ID: {statusText?.invoice} </p>
-      <p className="font-bold">Instructions</p>
-      <p>{statusText?.message}</p>
+      {processError ? (
+        <p className="text-center text-red-500 text-sm">{processError}</p>
+      ) : (
+        <>
+          <p className="font-bold">Instructions</p>
+          <p dangerouslySetInnerHTML={{ __html: statusText?.message }} />
+        </>
+      )}
 
       <div className="mt-4">
         <ButtonSpinner
@@ -28,16 +35,26 @@ const StatusCheck = ({
             confirmButtonText
               ? (() => {
                   setStep(0);
-                  reset();
+                  reset(
+                    {
+                      deliveries: [
+                        {
+                          number: "",
+                          items: "",
+                          notes: "",
+                        },
+                      ],
+                    },
+                    {
+                      keepDefaultValues: true,
+                    }
+                  );
                 })()
               : setTicking(true);
           }}
           btnText={confirmButtonText ? confirmButtonText : "Confirm Payment"}
           btnClasses="capitalize font-medium"
         />
-        {processError && (
-          <p className="text-center text-red-500 text-sm">{processError}</p>
-        )}
       </div>
     </div>
   );

@@ -35,7 +35,17 @@ const CreateDelivery = () => {
     reset,
     formState: { errors },
     handleSubmit,
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      deliveries: [
+        {
+          number: "",
+          items: "",
+          notes: "",
+        },
+      ],
+    },
+  });
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -91,55 +101,55 @@ const CreateDelivery = () => {
     })();
   }, [setActivePayments, setAppLoading, setOutlets, user]);
 
-  React.useEffect(() => {
-    append({});
+  // React.useEffect(() => {
+  //   append({});
 
-    if (fields.length > 1) {
-      const fieldsLength = fields.length;
+  //   if (fields.length > 1) {
+  //     const fieldsLength = fields.length;
 
-      remove(1);
-    }
-    return () => {};
-  }, []);
+  //     remove(1);
+  //   }
+  // }, []);
 
   const onBookDelivery = async (values) => {
-    console.log({ values });
-    const outletSelected = JSON.parse(values?.outletSelected);
-    const deliveries = values?.deliveries?.reduce((acc, val, index) => {
-      const items = val?.items
-        ?.split(",")
-        .filter((item) => Boolean(item))
-        .reduce((acc, item, index) => {
-          return {
-            ...acc,
-            [index]: {
-              delivery_item: item.trim(),
-            },
-          };
-        }, {});
-
-      return {
-        ...acc,
-        [index]: {
-          delivery_location: values?.deliveryInputValue?.label,
-          delivery_gps: values?.coordinates,
-          delivery_name:
-            "customerDetails" in values
-              ? values?.customerDetails?.customer_name
-              : "",
-          delivery_contact: val?.number,
-          delivery_email:
-            "customerDetails" in values
-              ? values?.customerDetails?.customer_email ?? ""
-              : "",
-          delivery_charge: values?.deliveryFee?.price,
-          delivery_items: items,
-          delivery_notes: val?.notes ?? "",
-        },
-      };
-    }, {});
-
     try {
+      console.log({ values });
+      setFetching(true);
+      const outletSelected = JSON.parse(values?.outletSelected);
+      const deliveries = values?.deliveries?.reduce((acc, val, index) => {
+        const items = val?.items
+          ?.split(",")
+          .filter((item) => Boolean(item))
+          .reduce((acc, item, index) => {
+            return {
+              ...acc,
+              [index]: {
+                delivery_item: item.trim(),
+              },
+            };
+          }, {});
+
+        return {
+          ...acc,
+          [index]: {
+            delivery_location: values?.deliveryInputValue?.label,
+            delivery_gps: values?.coordinates,
+            delivery_name:
+              "customerDetails" in values
+                ? values?.customerDetails?.customer_name
+                : "",
+            delivery_contact: val?.number,
+            delivery_email:
+              "customerDetails" in values
+                ? values?.customerDetails?.customer_email ?? ""
+                : "",
+            delivery_charge: values?.deliveryFee?.price,
+            delivery_items: items,
+            delivery_notes: val?.notes ?? "",
+          },
+        };
+      }, {});
+
       const data = {
         merchant: user?.user_merchant_id,
         delivery_type: "DELIVERY",
@@ -169,6 +179,8 @@ const CreateDelivery = () => {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setFetching(false);
     }
   };
 
@@ -233,8 +245,6 @@ const CreateDelivery = () => {
       //   throttledFn.cancel();
     }
   }, [loading, statusText?.invoice, ticking, user?.user_merchant_key]);
-
-  console.log({ fieldlength: fields.length });
 
   const outletsData = outlets?.map((outlet) => {
     return {
@@ -391,6 +401,7 @@ const CreateDelivery = () => {
             watch={watch}
             getValues={getValues}
             setValue={setValue}
+            fetching={fetching}
           />
         )}
 
@@ -409,6 +420,7 @@ const CreateDelivery = () => {
             processError={processError}
             setStep={setStep}
             reset={reset}
+            append={append}
           />
         )}
       </div>

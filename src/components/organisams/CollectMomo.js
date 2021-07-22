@@ -5,6 +5,7 @@ import { useAuth } from "../../ctx/Auth";
 import Button from "../atoms/Button";
 import Input from "../atoms/Input";
 import Select from "../atoms/Select";
+import ButtonSpinner from "../molecules/ButtonSpinner";
 import Label from "../molecules/Label";
 
 const CollectMomo = ({
@@ -16,6 +17,7 @@ const CollectMomo = ({
   setStep,
   setValue,
   getValues,
+  fetching,
 }) => {
   const {
     state: { user },
@@ -25,7 +27,8 @@ const CollectMomo = ({
     state: { activePayments },
   } = useApp();
 
-  const [fetching, setFetching] = React.useState(true);
+  const [fetchingDeliveryCharge, setfetchingDeliveryChargeDeliveryCharge] =
+    React.useState(true);
   const [deliveryCharge, setDeliveryCharge] = React.useState(0);
   const paymentOption = watch("paymentOption");
 
@@ -51,7 +54,7 @@ const CollectMomo = ({
         // console.log(resData);
         setDeliveryCharge(resData);
         setValue("totalAmount", resData);
-        setFetching(false);
+        setfetchingDeliveryChargeDeliveryCharge(false);
       })();
     }
   }, [getValues, paymentOption, setValue, user]);
@@ -125,15 +128,18 @@ const CollectMomo = ({
             </div>
           </div>
 
-          {!fetching && (
+          {!fetchingDeliveryCharge && (
             <div className="my-4">
               <p>
                 Your total delivery fees is{" "}
                 <span className="text-green-500 font-bold">
                   GHS {deliveryCharge?.total}
                 </span>
-                . You will receive a prompt on the mobile money number provided.
-                Enter your PIN to complete payments.
+                .
+                {paymentOption === "VISAG"
+                  ? ` You will receive an Email/SMS with a link to complete payment with your VISA or MASTERCARD.`
+                  : ` You will receive a prompt on the mobile money number provided.
+                    Enter your PIN to complete payments.`}
               </p>
             </div>
           )}
@@ -141,16 +147,20 @@ const CollectMomo = ({
           <div className="mt-4 flex justify-center w-full ">
             <div className="mr-4">
               <Button
+                disabled={fetching}
                 btnText="Back"
-                btnClasses="bg-black text-white"
+                btnClasses={
+                  fetching ? `bg-gray-300 text-gray-200` : `bg-black text-white`
+                }
                 onClick={() => setStep(0)}
               />
             </div>
             <div className="">
-              <Button
-                btnText="Book Delivery"
-                btnClasses="bg-green-500 text-white "
+              <ButtonSpinner
+                processing={fetching}
                 onClick={handleSubmit(onBookDelivery)}
+                btnText="Book Delivery"
+                btnClasses="capitalize font-medium"
               />
             </div>
           </div>

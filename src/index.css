@@ -784,6 +784,10 @@ video {
   height: 1.5rem;
 }
 
+.h-\[100px\]{
+  height: 100px;
+}
+
 .min-h-screen{
   min-height: 100vh;
 }
@@ -1011,6 +1015,11 @@ video {
 .bg-black{
   --tw-bg-opacity: 1;
   background-color: rgba(0, 0, 0, var(--tw-bg-opacity));
+}
+
+.bg-gray-100{
+  --tw-bg-opacity: 1;
+  background-color: rgba(243, 244, 246, var(--tw-bg-opacity));
 }
 
 .fill-current{

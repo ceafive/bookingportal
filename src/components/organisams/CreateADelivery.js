@@ -24,6 +24,7 @@ const CreateADelivery = ({
   // const [deliveryInputValue, setDeliveryInputValue] = React.useState("");
   const [deliveryData, setDeliveryData] = React.useState(null);
   const [customerData, setCustomerData] = React.useState(null);
+  const [openCustomerDiv, setOpenCustomerDiv] = React.useState(false);
 
   let outletSelected = watch("outletSelected");
   let deliveryInputValue = watch("deliveryInputValue", "");
@@ -110,7 +111,7 @@ const CreateADelivery = ({
   }, [outletSelected, deliveryInputValue]);
 
   React.useEffect(() => {
-    if (deliveries[index]?.number) {
+    if (deliveries[index]?.number && !customerData) {
       (async () => {
         const { data } = await axios.post("/api/customer-details", {
           phone: deliveries[index]?.number,
@@ -119,6 +120,13 @@ const CreateADelivery = ({
         // console.log(data);
         if (Number(data?.status) === 0) {
           setCustomerData(data?.data);
+
+          // if (customerData) {
+          setOpenCustomerDiv(true);
+          // }
+        } else {
+          setOpenCustomerDiv(false);
+          setCustomerData(null);
         }
         // const dataoutlets = res?.data?.data ?? [];
 
@@ -169,7 +177,7 @@ const CreateADelivery = ({
             )}
           </div>
           {deliveryData && (
-            <div className="w-full">
+            <div className="w-full mt-4">
               <p>
                 <span className="font-bold">Delivery Fee: </span>
                 <span>{`GHS${deliveryData?.price}`}</span>
@@ -192,16 +200,27 @@ const CreateADelivery = ({
             placeholder="Enter recipient's number"
             {...register(`deliveries[${index}].number`, {
               required: `Recipient number is required`,
+              minLength: {
+                value: 10,
+                message: `Must be 10 characters`,
+              },
+              maxLength: {
+                value: 10,
+                message: `Must be 10 characters`,
+              },
             })}
+            type="number"
+            pattern="[0-9]*"
+            noValidate
             defaultValue={number}
           />
 
-          {customerData && (
-            <div className="flex absolute top-[60px] left-0 h-[150px] w-full border border-gray-500 rounded p-2 bg-white z-50 overflow-scroll">
+          {openCustomerDiv && (
+            <div className="flex absolute top-[60px] left-0 h-[100px] w-full border border-gray-500 rounded p-2 bg-gray-100 z-50 overflow-scroll">
               <p
                 onClick={() => {
                   setValue("customerDetails", customerData);
-                  setCustomerData(null);
+                  setOpenCustomerDiv(false);
                 }}
               >
                 <span>{customerData?.customer_name}</span>{" "}
