@@ -37,7 +37,6 @@ const CreateDelivery = () => {
     handleSubmit,
   } = useForm({
     defaultValues: {
-      deliveryFee: {},
       deliveries: [
         {
           number: "",
@@ -53,7 +52,7 @@ const CreateDelivery = () => {
     name: "deliveries",
   });
 
-  const [step, setStep] = React.useState(1);
+  const [step, setStep] = React.useState(0);
   const [fetching, setFetching] = React.useState(false);
   const [statusText, setStatusText] = React.useState(null);
   const [ticking, setTicking] = React.useState(false);
