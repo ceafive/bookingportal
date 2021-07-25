@@ -18,8 +18,8 @@ function App() {
   const endTime = "20:00:00";
   const currentTime = newDate.toLocaleTimeString("en-GB");
 
-  // const deliveryIsOpen = true;
-  const deliveryIsOpen = currentTime > startTime && currentTime < endTime;
+  const deliveryIsOpen = true;
+  // const deliveryIsOpen = currentTime > startTime && currentTime < endTime;
   // console.log(deliveryIsOpen);
 
   useEffect(() => {

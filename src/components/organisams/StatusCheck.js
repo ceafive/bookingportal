@@ -15,12 +15,19 @@ const StatusCheck = ({
   reset,
   setStep,
   append,
+  setProcessError,
 }) => {
   return (
     <div className="text-center px-10">
       <p className="my-4 font-bold">Transaction ID: {statusText?.invoice} </p>
       {processError ? (
-        <p className="text-center text-red-500 text-sm">{processError}</p>
+        <p
+          className={`text-center text-sm ${
+            processError.includes("FAILED") ? `text-red-500` : `text-green-500`
+          } `}
+        >
+          {processError}
+        </p>
       ) : (
         <>
           <p className="font-bold">Instructions</p>
@@ -35,6 +42,10 @@ const StatusCheck = ({
             confirmButtonText
               ? (() => {
                   setStep(0);
+                  setProcessError(false);
+                  setConfirmButtonText("");
+                  setTicking(false);
+                  setLoading(false);
                   reset(
                     {
                       deliveries: [

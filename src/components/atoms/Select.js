@@ -2,9 +2,9 @@ import React from "react";
 import { getClassesString } from "../../utils";
 
 const Select = React.forwardRef(
-  ({ data = [], selectClasses, ...props }, ref) => {
+  ({ data = [], parentClasses, selectClasses, ...props }, ref) => {
     return (
-      <div className="relative">
+      <div className={`relative ${getClassesString(parentClasses)}`}>
         <select
           className={`block appearance-none w-full border border-gray-500 text-black py-2 rounded focus:outline-none bg-white ${getClassesString(
             selectClasses

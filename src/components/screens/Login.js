@@ -53,7 +53,7 @@ export default function Login() {
       });
 
       if (error.response) {
-        console.log(error.response.data);
+        console.log(error.response);
       } else if (error.request) {
         console.log(error.request);
       } else {

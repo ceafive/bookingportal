@@ -62,7 +62,7 @@ async function postHandler(req, res, url, data, additionalHeaders = {}) {
     const iPayResponse = await axiosIPAY.post(url, qs.stringify(data), {
       headers: additionalHeaders,
     });
-
+    console.log(iPayResponse);
     const iPayData = await iPayResponse.data;
     return res.status(200).json(iPayData);
   } catch (error) {
@@ -74,6 +74,7 @@ async function postHandler(req, res, url, data, additionalHeaders = {}) {
     } else {
       errorResponse = { error: error.message };
     }
+    console.log(errorResponse);
     return res.status(400).json(errorResponse);
   }
 }

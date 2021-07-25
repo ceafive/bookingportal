@@ -37,6 +37,7 @@ const CreateDelivery = () => {
     handleSubmit,
   } = useForm({
     defaultValues: {
+      deliveryFee: {},
       deliveries: [
         {
           number: "",
@@ -52,7 +53,7 @@ const CreateDelivery = () => {
     name: "deliveries",
   });
 
-  const [step, setStep] = React.useState(0);
+  const [step, setStep] = React.useState(1);
   const [fetching, setFetching] = React.useState(false);
   const [statusText, setStatusText] = React.useState(null);
   const [ticking, setTicking] = React.useState(false);
@@ -113,7 +114,6 @@ const CreateDelivery = () => {
 
   const onBookDelivery = async (values) => {
     try {
-      console.log({ values });
       setFetching(true);
       const outletSelected = JSON.parse(values?.outletSelected);
       const deliveries = values?.deliveries?.reduce((acc, val, index) => {
@@ -154,7 +154,6 @@ const CreateDelivery = () => {
         merchant: user?.user_merchant_id,
         delivery_type: "DELIVERY",
         delivery_outlet: outletSelected?.outlet_id,
-        // deliveries: deliveries,
         deliveries: JSON.stringify(deliveries),
         total_amount: values?.totalAmount?.total,
         service_charge: values?.totalAmount?.charge,
@@ -165,7 +164,7 @@ const CreateDelivery = () => {
         mod_by: user?.login,
       };
 
-      console.log(data);
+      // console.log(data);
       // return;
       const { data: resData } = await axios.post("/api/raise-order", data);
       // console.log({ resData });
@@ -179,6 +178,83 @@ const CreateDelivery = () => {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setFetching(false);
+    }
+  };
+
+  const onRaiseOrder = async (values) => {
+    try {
+      // console.log({ values });
+
+      setFetching(true);
+      const outletSelected = JSON.parse(values?.outletSelected);
+      const deliveries = values?.deliveries?.reduce((acc, val, index) => {
+        const items = val?.items
+          ?.split(",")
+          .filter((item) => Boolean(item))
+          .reduce((acc, item, index) => {
+            return {
+              ...acc,
+              [index]: {
+                delivery_item: item.trim(),
+              },
+            };
+          }, {});
+
+        return {
+          ...acc,
+          [index]: {
+            delivery_location: values?.deliveryInputValue?.label,
+            delivery_gps: values?.coordinates,
+            delivery_name:
+              "customerDetails" in values
+                ? values?.customerDetails?.customer_name
+                : "",
+            delivery_contact: val?.number,
+            delivery_email:
+              "customerDetails" in values
+                ? values?.customerDetails?.customer_email ?? ""
+                : "",
+            delivery_charge: values?.deliveryFee?.price,
+            delivery_items: items,
+            delivery_notes: val?.notes ?? "",
+          },
+        };
+      }, {});
+
+      const data = {
+        merchant: user?.user_merchant_id,
+        delivery_type: "DELIVERY",
+        delivery_outlet: outletSelected?.outlet_id,
+        deliveries: JSON.stringify(deliveries),
+        total_amount: 0.1,
+        // total_amount: values?.deliveryFee?.price,
+        source: "INSHP",
+        mod_by: user?.login,
+      };
+
+      // console.log(data);
+      // return;
+      const { data: resData } = await axios.post("/api/raise-order", data);
+
+      if (Number(resData?.status) !== 0) {
+        toast.error(resData?.message);
+      } else {
+        setStatusText({ invoice: resData?.invoice, message: resData?.message });
+        setStep(1);
+        // toast.success(resData?.message);
+      }
+    } catch (error) {
+      let errorResponse = "";
+      if (error.response) {
+        errorResponse = error.response.data;
+      } else if (error.request) {
+        errorResponse = error.request;
+      } else {
+        errorResponse = { error: error.message };
+      }
+      console.log(errorResponse);
     } finally {
       setFetching(false);
     }
@@ -209,24 +285,23 @@ const CreateDelivery = () => {
         await sleep(5000);
         const data = await getResData();
         const { message } = data; // new, awaiting_payment, paid, cancelled, failed, expired   ie message values
+        // console.log(message);
 
         if (message === "new" || message === "awaiting_payment") {
           setLoading(true);
         } else {
-          if (message === "paid") {
-            setFetching(false);
-            setLoading(false);
-          } else if (
-            message === "cancelled" ||
-            message === "failed" ||
-            message === "new" ||
-            message === "expired"
-          ) {
-            setLoading(false);
-            setFetching(false);
-            setConfirmButtonText("Start New Delivery");
-            setProcessError(`${upperCase(message)} TRANSACTION`);
-          }
+          setConfirmButtonText("Start New Delivery");
+          setProcessError(`${upperCase(message)} TRANSACTION`);
+          setLoading(false);
+          setFetching(false);
+          // if (message === "paid") {
+          // } else if (
+          //   message === "cancelled" ||
+          //   message === "failed" ||
+          //   message === "new" ||
+          //   message === "expired"
+          // ) {
+          // }
         }
 
         setLoading(false);
@@ -244,7 +319,7 @@ const CreateDelivery = () => {
       //   (verifyTransactionResponse?.message !== "new" || verifyTransactionResponse?.message !== "awaiting_payment") &&
       //   throttledFn.cancel();
     }
-  }, [loading, statusText?.invoice, ticking, user?.user_merchant_key]);
+  }, [loading, statusText?.invoice, ticking, user.user_merchant_key]);
 
   const outletsData = outlets?.map((outlet) => {
     return {
@@ -295,7 +370,7 @@ const CreateDelivery = () => {
         </div>
       </Header>
 
-      <div className="absolute top-[100px] w-full">
+      <div className="absolute top-[100px] w-full pb-4">
         {step === 0 && (
           <div>
             <p className="text-sm px-10 text-center mb-4 font-bold">
@@ -379,13 +454,14 @@ const CreateDelivery = () => {
               <div className="w-2/3">
                 <Button
                   disabled={fetching}
-                  btnText="Next"
+                  btnText="Raise Order"
                   btnClasses={`${
                     fetching
                       ? "!bg-gray-300 !text-gray-100"
                       : "!bg-green-500 !text-white"
                   }`}
-                  onClick={handleSubmit(() => setStep(1))}
+                  // onClick={handleSubmit(() => setStep(1))}
+                  onClick={handleSubmit(onRaiseOrder)}
                 />
               </div>
             </div>
@@ -403,6 +479,9 @@ const CreateDelivery = () => {
             getValues={getValues}
             setValue={setValue}
             fetching={fetching}
+            statusText={statusText}
+            setFetching={setFetching}
+            setStatusText={setStatusText}
           />
         )}
 

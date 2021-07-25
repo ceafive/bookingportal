@@ -24,23 +24,26 @@ const CreateADelivery = ({
 }) => {
   // const {state: {outlets}} =  useApp()
   // const [deliveryInputValue, setDeliveryInputValue] = React.useState("");
-  const [deliveryData, setDeliveryData] = React.useState(null);
   const [customerData, setCustomerData] = React.useState(null);
   const [openCustomerDiv, setOpenCustomerDiv] = React.useState(false);
 
   let outletSelected = watch("outletSelected");
   let deliveryInputValue = watch("deliveryInputValue", "");
   let deliveries = watch(`deliveries`);
+  let deliveryData = watch(`deliveryFee`);
 
   // console.log({ value });
 
   React.useEffect(() => {
     const getCoordinates = async () => {
       setFetching(true);
+      setValue(`deliveryFee`, null);
+
       const response = await axios.post("/api/coordinates", {
         deliveryInputValue,
       });
       const responsedata = await response.data;
+
       // console.log({ responsedata });
 
       const stringCoordinates = `${responsedata["candidates"][0]["geometry"]["location"]["lat"]},${responsedata["candidates"][0]["geometry"]["location"]["lng"]}`;
@@ -75,7 +78,6 @@ const CreateADelivery = ({
               const price = get(data, "price", 0);
               data = { ...data, price: Number(parseFloat(price)) };
 
-              setDeliveryData(data);
               setValue(`deliveryFee`, data);
             } else {
               toast.error(
@@ -95,6 +97,7 @@ const CreateADelivery = ({
           }
           console.log(errorResponse);
         } finally {
+          setFetching(false);
         }
       };
 
@@ -176,8 +179,7 @@ const CreateADelivery = ({
                       },
                       placeholder: "Search for the delivery location",
                       value: deliveryInputValue,
-                      onChange: (value) =>
-                        setValue("deliveryInputValue", value),
+                      onChange,
                     }}
                   />
                 )}
