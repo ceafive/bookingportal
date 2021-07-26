@@ -85,7 +85,7 @@ const CollectMomo = ({
 
       const res = await axios.post("/api/process-payment", data);
       const resData = res?.data ?? {};
-      // console.log(resData);
+      console.log(resData);
 
       if (Number(resData?.status) !== 0) {
         toast.error(resData?.message);
@@ -108,15 +108,47 @@ const CollectMomo = ({
     }
   };
 
-  const onProcessCardPayment = async () => {
+  const onProcessCardPayment = async (values) => {
     try {
-      console.log("here");
-      window.gw.Pay("cyb_iframe", "327338695600375414", (e) => {
-        console.log(e);
-      });
+      setFetching(true);
+      const data = {
+        payment_invoice: statusText?.invoice,
+        total_amount: 0.1,
+        // total_amount: values?.totalAmount?.total,
+        service_charge: values?.totalAmount?.charge,
+        payment_number: `00000000`,
+        payment_network: values?.paymentOption,
+        mod_by: user?.login,
+        merchant: user?.user_merchant_id,
+      };
+
+      console.log(data);
+
+      const res = await axios.post("/api/process-payment", data);
+      const resData = res?.data ?? {};
+      console.log(resData);
+      return;
+
+      if (Number(resData?.status) !== 0) {
+      } else {
+        window.gw.Pay("cyb_iframe", resData?.reference, (e) => {
+          console.log(e);
+        });
+      }
+
       return false;
     } catch (error) {
-      console.log(error);
+      let errorResponse = "";
+      if (error.response) {
+        errorResponse = error.response.data;
+      } else if (error.request) {
+        errorResponse = error.request;
+      } else {
+        errorResponse = { error: error.message };
+      }
+      console.log(errorResponse);
+    } finally {
+      setFetching(false);
     }
   };
 

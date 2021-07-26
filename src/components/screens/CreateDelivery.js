@@ -260,7 +260,7 @@ const CreateDelivery = () => {
   };
 
   // console.log(user);
-  console.log(errors);
+  // console.log(errors);
 
   const sleep = (ms) => {
     return new Promise((resolve) => setTimeout(resolve, ms));
