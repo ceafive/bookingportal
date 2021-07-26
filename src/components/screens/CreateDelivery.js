@@ -215,7 +215,8 @@ const CreateDelivery = () => {
               "customerDetails" in values
                 ? values?.customerDetails?.customer_email ?? ""
                 : "",
-            delivery_charge: values?.deliveryFee?.price,
+            delivery_charge: 0.1,
+            // delivery_charge: values?.deliveryFee?.price,
             delivery_items: items,
             delivery_notes: val?.notes ?? "",
           },
@@ -223,13 +224,13 @@ const CreateDelivery = () => {
       }, {});
 
       const data = {
-        merchant: user?.user_merchant_id,
         delivery_type: "DELIVERY",
         delivery_outlet: outletSelected?.outlet_id,
         deliveries: JSON.stringify(deliveries),
         total_amount: 0.1,
         // total_amount: values?.deliveryFee?.price,
         source: "INSHP",
+        merchant: user?.user_merchant_id,
         mod_by: user?.login,
       };
 
@@ -336,6 +337,8 @@ const CreateDelivery = () => {
       </div>
     );
   }
+
+  // console.log(window.gw.Pay);
 
   return (
     <div className="relative min-h-screen w-full">
@@ -459,7 +462,6 @@ const CreateDelivery = () => {
                       ? "!bg-gray-300 !text-gray-100"
                       : "!bg-green-500 !text-white"
                   }`}
-                  // onClick={handleSubmit(() => setStep(1))}
                   onClick={handleSubmit(onRaiseOrder)}
                 />
               </div>
@@ -472,7 +474,6 @@ const CreateDelivery = () => {
             register={register}
             handleSubmit={handleSubmit}
             errors={errors}
-            onBookDelivery={onBookDelivery}
             setStep={setStep}
             watch={watch}
             getValues={getValues}

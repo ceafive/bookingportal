@@ -15,7 +15,6 @@ const CollectMomo = ({
   errors,
   watch,
   handleSubmit,
-  onBookDelivery,
   setStep,
   setValue,
   getValues,
@@ -127,7 +126,6 @@ const CollectMomo = ({
       const res = await axios.post("/api/process-payment", data);
       const resData = res?.data ?? {};
       console.log(resData);
-      return;
 
       if (Number(resData?.status) !== 0) {
       } else {
@@ -495,23 +493,17 @@ const CollectMomo = ({
             <div className="">
               <ButtonSpinner
                 processing={fetching}
-                onClick={handleSubmit(onProcessCardPayment)}
+                onClick={handleSubmit(
+                  paymentOption === "VISAG"
+                    ? onProcessCardPayment
+                    : onProcessPayment
+                )}
                 btnText="Process Payment"
                 btnClasses="capitalize font-medium"
               />
             </div>
           </div>
         </div>
-      </div>
-      <div id="cyb_iframe_div" style={{ display: "none" }}>
-        <iframe
-          title="cyb_iframe"
-          id="cyb_iframe"
-          name="cyb_iframe"
-          style={{ height: "100%", width: "100%" }}
-          height="100%"
-          width="100%"
-        ></iframe>
       </div>
     </div>
   );

@@ -35,7 +35,7 @@ router.post("/coordinates", async function (req, res, next) {
     const iPayResponse = await axios.get(
       `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=%${deliveryInputValue.value.description}&inputtype=textquery&fields=geometry&key=AIzaSyCwlbBlciY3kB52y5_h0k4Zxmi8Ho4zK3M`
     );
-    console.log({ iPayResponse });
+
     const iPayData = await iPayResponse.data;
     return res.status(200).json(iPayData);
   } catch (error) {
