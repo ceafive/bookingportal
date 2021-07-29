@@ -32,6 +32,8 @@ app.use(function (err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
   res.send(err.message);
+  console.log(err);
+  console.log(err.message);
 });
 
 if (process.env.NODE_ENV === "production") {
