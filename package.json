@@ -27,7 +27,8 @@
     "build:css": "tailwindcss -i src/tailwind.css -o src/index.css",
     "build:client": "react-scripts build",
     "build:server": "cd api && npm install",
-    "start": "cd api && npm start"
+    "start": "cd api && npm start",
+    "install": "npm i && cd api && npm i"
   },
   "eslintConfig": {
     "extends": [
