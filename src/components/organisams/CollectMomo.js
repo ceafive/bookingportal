@@ -112,7 +112,7 @@ const CollectMomo = ({
       setFetching(true);
       const data = {
         payment_invoice: statusText?.invoice,
-        total_amount: 0.1,
+        total_amount: 1,
         // total_amount: values?.totalAmount?.total,
         service_charge: values?.totalAmount?.charge,
         payment_number: `00000000`,

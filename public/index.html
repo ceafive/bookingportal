@@ -33,6 +33,17 @@
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
+    <div id="cyb_iframe_div" style="display: none">
+      <iframe
+        title="cyb_iframe"
+        id="cyb_iframe"
+        name="cyb_iframe"
+        style="height: 100vh; width: 100vw"
+        height="100%"
+        width="100%"
+      ></iframe>
+    </div>
+
     <script
       type="module"
       src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"
@@ -160,7 +171,7 @@
                   //alert(data.reason);
                   return false;
                 } else {
-                  console.log({ data });
+                  console.log(data);
                   _cybsign = data.signature;
                   _cybfields = JSON.stringify(data.TxnData);
                   _cybapiurl = data.endpoint;
@@ -184,7 +195,7 @@
           _gwObject.processCybCard = function () {
             apiurl = _cybapiurl;
             data = JSON.parse(_cybfields);
-            console.log({ data });
+            console.log(data);
 
             data["card_number"] = $("#gw_card_number").val();
             data["card_type"] = $("#gw_card_type").val();
@@ -217,14 +228,14 @@
 
             document.body.appendChild(form);
             form._submit_function_();
-            //console.log(form);
+            console.log(form);
 
-            return true;
+            return false;
           };
 
           _gwObject.Show3DsForm = function (url) {
             //$("#gw_modal").iziModal();
-            console.log(url);
+            // console.log(url);
             $("#" + _gwFrameID + "_div").iziModal({
               //iframe: true,
               //iframeHeight: 800,
@@ -264,7 +275,7 @@
           };
 
           _gwObject.MessageHandler = function (e) {
-            console.log(e.data.event_id);
+            console.log(e.data);
             if (e.data.event_id == "gw_show_overlay") {
               _gwObject.ShowOverlay();
             } else if (e.data.event_id == "gw_hide_overlay") {
@@ -300,16 +311,5 @@
       // Then we can call our custom function using
       //myWindowGlobalLibraryName.myCustomLog(["My library","Rules"]);
     </script>
-
-    <div id="cyb_iframe_div" style="display: none">
-      <iframe
-        title="cyb_iframe"
-        id="cyb_iframe"
-        name="cyb_iframe"
-        style="height: 100vh; width: 100vw"
-        height="100%"
-        width="100%"
-      ></iframe>
-    </div>
   </body>
 </html>
