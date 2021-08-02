@@ -75,7 +75,7 @@ const CreateDelivery = () => {
           if (
             dataactivepayment === "MTNMM" ||
             dataactivepayment === "VODAC" ||
-            dataactivepayment === "VISAG" ||
+            // dataactivepayment === "VISAG" || // TODO: check and implement functionality and decomment
             dataactivepayment === "TIGOC"
           )
             return true;
