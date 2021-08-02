@@ -275,9 +275,9 @@ const CreateDelivery = () => {
           const { data: resData } = await axios.post(
             "/api/verify-transaction",
             {
-              merchantKey: "32ab0a3c-412b-11eb-9b73-f23c9170642f",
+              merchantKey: "32ab0a3c-412b-11eb-9b73-f23c9170642f", //TODO: hardcoded key contact Philip
               trxID: statusText?.invoice,
-            } //TODO: hardcoded key contact Philip
+            }
           );
           return resData;
         };
