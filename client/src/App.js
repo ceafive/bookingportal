@@ -5,6 +5,24 @@ import Login from "./components/screens/Login";
 import { useAuth } from "./ctx/Auth";
 import ClosedMessage from "./components/screens/ClosedMessage";
 import { Toaster } from "react-hot-toast";
+import * as Sentry from "@sentry/react";
+
+function FallbackComponent() {
+  return (
+    <div className="flex flex-col justify-center items-center w-full min-h-screen">
+      <p>An error has occurred</p>
+      <button
+        onClick={() => {
+          window?.location?.reload();
+        }}
+      >
+        Reload
+      </button>
+    </div>
+  );
+}
+
+const myFallback = <FallbackComponent />;
 
 function App() {
   const {
@@ -47,10 +65,12 @@ function App() {
   }
 
   return (
-    <div className="flex flex-col justify-center items-center w-full min-h-screen">
-      <ComponentToRender width={30} height={30} />
-      <Toaster />
-    </div>
+    <Sentry.ErrorBoundary fallback={myFallback} showDialog>
+      <div className="flex flex-col justify-center items-center w-full min-h-screen">
+        <ComponentToRender width={30} height={30} />
+        <Toaster />
+      </div>
+    </Sentry.ErrorBoundary>
   );
 }
 
