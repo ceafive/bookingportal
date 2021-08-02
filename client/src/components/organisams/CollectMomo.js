@@ -70,8 +70,8 @@ const CollectMomo = ({
       setFetching(true);
       const data = {
         payment_invoice: statusText?.invoice,
-        total_amount: 0.1,
-        // total_amount: values?.totalAmount?.total,
+        // total_amount: 0.1,
+        total_amount: values?.totalAmount?.total,
         service_charge: values?.totalAmount?.charge,
         payment_type: values?.paymentOption === "VISAG" ? "CARD" : "MOMO",
         payment_number: values?.momoNumberOrEmailAddress,
@@ -112,8 +112,8 @@ const CollectMomo = ({
       setFetching(true);
       const data = {
         payment_invoice: statusText?.invoice,
-        total_amount: 1,
-        // total_amount: values?.totalAmount?.total,
+        // total_amount: 1,
+        total_amount: values?.totalAmount?.total,
         service_charge: values?.totalAmount?.charge,
         payment_number: `00000000`,
         payment_network: values?.paymentOption,

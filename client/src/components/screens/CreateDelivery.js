@@ -215,8 +215,8 @@ const CreateDelivery = () => {
               "customerDetails" in values
                 ? values?.customerDetails?.customer_email ?? ""
                 : "",
-            delivery_charge: 1,
-            // delivery_charge: values?.deliveryFee?.price,
+            // delivery_charge: 1,
+            delivery_charge: values?.deliveryFee?.price,
             delivery_items: items,
             delivery_notes: val?.notes ?? "",
           },
@@ -227,8 +227,8 @@ const CreateDelivery = () => {
         delivery_type: "DELIVERY",
         delivery_outlet: outletSelected?.outlet_id,
         deliveries: JSON.stringify(deliveries),
-        total_amount: 1,
-        // total_amount: values?.deliveryFee?.price,
+        // total_amount: 1,
+        total_amount: values?.deliveryFee?.price,
         source: "INSHP",
         merchant: user?.user_merchant_id,
         mod_by: user?.login,

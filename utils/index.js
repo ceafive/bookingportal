@@ -31,8 +31,8 @@ function getHeaders() {
 }
 
 const axiosIPAY = axios.create({
-  baseURL: "https://manage.ipaygh.com/apidev/v1/gateway",
-  headers: { ...getHeaders() },
+  baseURL: process.env.BASE_URI,
+  headers: getHeaders(),
 });
 
 async function deleteHandler(req, res, url) {
