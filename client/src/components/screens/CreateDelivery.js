@@ -342,36 +342,6 @@ const CreateDelivery = () => {
 
   return (
     <div className="relative min-h-screen w-full">
-      <Header>
-        <div className="flex justify-between items-center h-full px-1">
-          <div className="flex items-center">
-            <div className="w-28">
-              <Logo className="" />
-            </div>
-          </div>
-
-          <div className="flex justify-between items-center text-sm">
-            <div className="flex justify-between items-center mr-2">
-              <div className="mr-1">
-                <ion-icon name="person" />
-              </div>
-              <h1 className="-mt-1">{user?.user_merchant}</h1>
-            </div>
-
-            <div className="flex justify-between items-center">
-              <div className="mr-1">
-                <ion-icon name="log-out" />
-              </div>
-              <Button
-                btnText={"Logout"}
-                btnClasses="!shadow-none !rounded-none !p-0 !-mt-1"
-                onClick={logoutUser}
-              />
-            </div>
-          </div>
-        </div>
-      </Header>
-
       <div className="absolute top-[100px] w-full pb-4">
         {step === 0 && (
           <div>

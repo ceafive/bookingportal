@@ -92,4 +92,15 @@ router.post("/process-payment", async function (req, res, next) {
   return await postHandler(req, res, `/orders/payment/process`, req.body);
 });
 
+/* GET order history */
+router.post("/get-orders", async function (req, res, next) {
+  const { merchant, start_date, end_date } = req.body;
+  // console.log({ merchant, start_date, end_date });
+  return await getHandler(
+    req,
+    res,
+    `/orders/delivery/process/${merchant}/list/${start_date}/${end_date}`
+  );
+});
+
 module.exports = router;

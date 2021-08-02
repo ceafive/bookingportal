@@ -4,6 +4,7 @@ const initialState = {
   appLoading: true,
   outlets: [],
   activePayments: [],
+  componentToRender: "raise",
 };
 
 const AppContext = createContext();
@@ -27,7 +28,11 @@ const AppProvider = ({ children }) => {
           ...state,
           activePayments: action.payload,
         };
-
+      case "COMPONENT_TO_RENDER":
+        return {
+          ...state,
+          componentToRender: action.payload,
+        };
       // case 'SET_CURRENT_DELIVERY_LOCATION'
 
       default:
@@ -52,6 +57,11 @@ const AppProvider = ({ children }) => {
       setAppLoading: (payload) =>
         dispatch({
           type: "LOADING",
+          payload,
+        }),
+      setComponentToRender: (payload) =>
+        dispatch({
+          type: "COMPONENT_TO_RENDER",
           payload,
         }),
     }),
