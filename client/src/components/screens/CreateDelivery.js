@@ -282,7 +282,7 @@ const CreateDelivery = () => {
           return resData;
         };
 
-        await sleep(5000);
+        await sleep(30000);
         const data = await getResData();
         const { message } = data; // new, awaiting_payment, paid, cancelled, failed, expired   ie message values
         // console.log(message);
@@ -311,13 +311,9 @@ const CreateDelivery = () => {
     };
 
     if (ticking) {
-      throttle(verifyTransaction, 10000, {
+      throttle(verifyTransaction, 50000, {
         trailing: false,
       })();
-      // !loading &&
-      //   verifyTransactionResponse &&
-      //   (verifyTransactionResponse?.message !== "new" || verifyTransactionResponse?.message !== "awaiting_payment") &&
-      //   throttledFn.cancel();
     }
   }, [loading, statusText?.invoice, ticking, user.user_merchant_key]);
 
