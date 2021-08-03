@@ -9,6 +9,7 @@ import axios from "axios";
 import { filter } from "lodash";
 
 export function TableExample({ orders }) {
+  // console.log(orders);
   return (
     <>
       {" "}
@@ -63,7 +64,7 @@ export function TableExample({ orders }) {
                   <Td>{order?.delivery_notes || "N/A"}</Td>
                   <Td>
                     {order?.delivery_type === "DELIVERY"
-                      ? order?.delivery_rider_name
+                      ? order?.delivery_rider_name || "N/A"
                       : "N/A"}
                   </Td>
                   <Td>{order?.total_amount}</Td>
@@ -115,7 +116,7 @@ const TrackRequest = () => {
       try {
         setFetching(true);
         const formCurrentValues = getValues();
-        console.log(formCurrentValues);
+        // console.log(formCurrentValues);
         const data = {
           merchant: user?.user_merchant_id,
           start_date: format(formCurrentValues?.startDate, "dd-MM-yyyy"),
@@ -160,8 +161,8 @@ const TrackRequest = () => {
     <div className="relative min-h-screen w-full">
       <div className="absolute top-[100px] w-full pb-4 px-3">
         <div className="w-full">
-          <div className="flex w-full justify-between items-center">
-            <div className="flex w-full">
+          <div className="flex w-full sm:w-auto justify-center items-center">
+            <div className="flex w-full sm:w-auto">
               <input
                 className="form-input"
                 {...register("startDate", {

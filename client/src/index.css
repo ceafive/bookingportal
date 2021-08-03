@@ -839,6 +839,10 @@ video {
   width: 12rem;
 }
 
+.w-4\/5{
+  width: 80%;
+}
+
 .flex-auto{
   flex: 1 1 auto;
 }
@@ -1229,6 +1233,16 @@ video {
 .active\:bg-green-600:active{
   --tw-bg-opacity: 1;
   background-color: rgba(5, 150, 105, var(--tw-bg-opacity));
+}
+
+@media (min-width: 640px){
+  .sm\:w-2\/3{
+    width: 66.666667%;
+  }
+
+  .sm\:w-auto{
+    width: auto;
+  }
 }
 
 @media (min-width: 1024px){

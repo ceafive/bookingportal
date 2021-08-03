@@ -115,7 +115,7 @@ function App() {
                 </div>
               </div>
               <div className="flex justify-center items-center w-full text-sm mb-2">
-                <div className="w-2/3 flex justify-between items-center">
+                <div className="w-4/5 sm:w-2/3 flex justify-between items-center">
                   <button
                     className={`${
                       componentToRender === "raise"
