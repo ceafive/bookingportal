@@ -819,8 +819,8 @@ video {
   width: 7rem;
 }
 
-.w-2\/3{
-  width: 66.666667%;
+.w-4\/5{
+  width: 80%;
 }
 
 .w-6{
@@ -839,8 +839,8 @@ video {
   width: 12rem;
 }
 
-.w-4\/5{
-  width: 80%;
+.w-2\/3{
+  width: 66.666667%;
 }
 
 .flex-auto{

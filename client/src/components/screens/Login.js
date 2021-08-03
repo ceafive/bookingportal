@@ -33,6 +33,8 @@ export default function Login() {
         message: "",
       });
 
+      // console.log(values);
+
       const res = await axios.post("/api/login", values);
       const data = verifyToken(res?.data);
 
