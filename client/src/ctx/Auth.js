@@ -4,6 +4,7 @@ const initialState = {
   loading: true,
   isLoggedIn: false,
   user: null,
+  showHeader: false,
 };
 
 const AuthContext = createContext();
@@ -27,6 +28,7 @@ const AuthProvider = ({ children }) => {
             loading: false,
             isLoggedIn: true,
             user,
+            showHeader: true,
           };
         } else {
           return {
@@ -34,6 +36,7 @@ const AuthProvider = ({ children }) => {
             loading: false,
             isLoggedIn: false,
             user: null,
+            showHeader: false,
           };
         }
 
@@ -43,6 +46,7 @@ const AuthProvider = ({ children }) => {
           loading: false,
           isLoggedIn: "verified" in action.payload ? true : false,
           user: "user" in action.payload ? action.payload.user : null,
+          showHeader: true,
         };
 
       case "LOGOUT":
@@ -52,6 +56,7 @@ const AuthProvider = ({ children }) => {
           loading: false,
           isLoggedIn: false,
           user: null,
+          showHeader: false,
         };
       default:
         return state;
