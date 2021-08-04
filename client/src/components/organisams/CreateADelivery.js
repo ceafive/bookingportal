@@ -46,10 +46,14 @@ const CreateADelivery = ({
       });
       const responsedata = await response.data;
 
+      // console.log({ deliveryInputValue });
       // console.log({ responsedata });
+      // return;
 
-      const stringCoordinates = `${responsedata["candidates"][0]["geometry"]["location"]["lat"]},${responsedata["candidates"][0]["geometry"]["location"]["lng"]}`;
+      // const stringCoordinates = `${responsedata["candidates"][0]["geometry"]["location"]["lat"]},${responsedata["candidates"][0]["geometry"]["location"]["lng"]}`; TODO: used with old url in get coordinates backend route
+      const stringCoordinates = `${responsedata["results"][0]["geometry"]["location"]["lat"]},${responsedata["results"][0]["geometry"]["location"]["lng"]}`; // TODO: used with old url in get coordinates backend route
       setValue("coordinates", stringCoordinates);
+      // console.log({ stringCoordinates });
 
       const fetchItems = async (stringCoordinates) => {
         try {
@@ -66,13 +70,14 @@ const CreateADelivery = ({
             destination_gps: stringCoordinates,
           };
 
+          // console.log({ payload });
+
           if (!isEmpty(outletSelected)) {
             const { data: resData } = await axios.post(
               "/api/delivery-charge",
               payload
             );
             // console.log({ resData });
-            // console.log({ payload });
 
             if (Number(resData?.status) === 0) {
               let { data } = await resData;

@@ -60,6 +60,8 @@ const CreateDelivery = () => {
   const [confirmButtonText, setConfirmButtonText] = React.useState("");
   const [processError, setProcessError] = React.useState(false);
 
+  const statusCheckTotalRunTime = 60000;
+
   React.useEffect(() => {
     (async () => {
       setAppLoading(true);
@@ -268,7 +270,7 @@ const CreateDelivery = () => {
   };
 
   React.useEffect(() => {
-    const verifyTransaction = async () => {
+    const verifyTransaction = async (firstTimeStarted) => {
       try {
         setFetching(true);
         const getResData = async () => {
@@ -282,40 +284,57 @@ const CreateDelivery = () => {
           return resData;
         };
 
-        await sleep(30000);
+        // await sleep(30000);
         const data = await getResData();
         const { message } = data; // new, awaiting_payment, paid, cancelled, failed, expired   ie message values
         // console.log(message);
 
         if (message === "new" || message === "awaiting_payment") {
-          setLoading(true);
+          // console.log(
+          //   Date.now() - firstTimeStarted > statusCheckTotalRunTime - 10000
+          // );
+          if (Date.now() - firstTimeStarted > statusCheckTotalRunTime - 10000) {
+            setConfirmButtonText("Start New Delivery");
+            setProcessError(
+              "Sorry, Payment for your Delivery request is pending confirmation. <br>You will be notified via Email/SMS once your payment is confirmed.<br>And your request will be processed."
+            );
+            setFetching(false);
+            setTicking(false);
+          }
         } else {
           setConfirmButtonText("Start New Delivery");
           setProcessError(`${upperCase(message)} TRANSACTION`);
-          setLoading(false);
           setFetching(false);
-          // if (message === "paid") {
-          // } else if (
-          //   message === "cancelled" ||
-          //   message === "failed" ||
-          //   message === "new" ||
-          //   message === "expired"
-          // ) {
-          // }
+          setTicking(false);
         }
-
-        setLoading(false);
       } catch (error) {
         console.log(error);
       }
     };
 
+    // if (ticking) {
+    //   throttle(verifyTransaction, 50000, {
+    //     trailing: false,
+    //   })();
+    // }
+
+    // I want to call a Javascript function x times for y seconds
     if (ticking) {
-      throttle(verifyTransaction, 50000, {
-        trailing: false,
-      })();
+      verifyTransaction(Date.now());
+      var started = Date.now();
+      // make it loop every 10 seconds
+      var interval = setInterval(function () {
+        // for 30 seconds
+        if (Date.now() - started > statusCheckTotalRunTime) {
+          // and then pause it
+          clearInterval(interval);
+        } else {
+          // the thing to do every 10 seconds
+          verifyTransaction(started);
+        }
+      }, 10000); // every 10 seconds
     }
-  }, [loading, statusText?.invoice, ticking, user.user_merchant_key]);
+  }, [statusText?.invoice, ticking]);
 
   const outletsData = outlets?.map((outlet) => {
     return {

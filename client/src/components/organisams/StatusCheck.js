@@ -22,12 +22,13 @@ const StatusCheck = ({
       <p className="my-4 font-bold">Transaction ID: {statusText?.invoice} </p>
       {processError ? (
         <p
+          dangerouslySetInnerHTML={{ __html: processError }}
           className={`text-center text-sm ${
-            processError.includes("FAILED") ? `text-red-500` : `text-green-500`
+            processError.includes("FAILED") || processError.includes("Sorry")
+              ? `text-red-500`
+              : `text-green-500`
           } `}
-        >
-          {processError}
-        </p>
+        />
       ) : (
         <>
           <p className="font-bold">Instructions</p>

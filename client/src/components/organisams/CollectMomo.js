@@ -84,7 +84,7 @@ const CollectMomo = ({
 
       const res = await axios.post("/api/process-payment", data);
       const resData = res?.data ?? {};
-      console.log(resData);
+      // console.log(resData);
 
       if (Number(resData?.status) !== 0) {
         toast.error(resData?.message);
