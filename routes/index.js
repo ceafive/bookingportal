@@ -33,7 +33,7 @@ router.post("/coordinates", async function (req, res, next) {
   const { deliveryInputValue } = req.body;
   try {
     const iPayResponse = await axios.get(
-      `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=%${deliveryInputValue.value.description}&inputtype=textquery&fields=geometry&key=AIzaSyCwlbBlciY3kB52y5_h0k4Zxmi8Ho4zK3M`
+      `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=${deliveryInputValue.value.description}&inputtype=textquery&fields=geometry&key=AIzaSyCwlbBlciY3kB52y5_h0k4Zxmi8Ho4zK3M`
     );
 
     const iPayData = await iPayResponse.data;

@@ -39,6 +39,8 @@ const CreateADelivery = ({
       setFetching(true);
       setValue(`deliveryFee`, null);
 
+      // console.log(deliveryInputValue);
+
       const response = await axios.post("/api/coordinates", {
         deliveryInputValue,
       });
