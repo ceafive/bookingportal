@@ -243,9 +243,7 @@ const CreateADelivery = ({
                 message: `Must be 10 characters`,
               },
             })}
-            type="number"
-            pattern="[0-9]*"
-            noValidate
+            type="text"
             defaultValue={number}
           />
 
