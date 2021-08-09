@@ -73,7 +73,7 @@ router.post("/transaction-fees", async function (req, res, next) {
 /* GET customer details */
 router.post("/customer-details", async function (req, res, next) {
   const { phone } = req.body;
-  return await getHandler(req, res, `customers/customer/lookup/${phone}`);
+  return await getHandler(req, res, `customers/customer/lookups/${phone}`);
 });
 
 /* POST raise order */

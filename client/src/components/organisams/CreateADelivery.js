@@ -123,11 +123,18 @@ const CreateADelivery = ({
   }, [outletSelected, deliveryInputValue]);
 
   React.useEffect(() => {
-    if (deliveries[index]?.number) {
+    const space = new RegExp("\\s");
+    const testforspace = space.test(deliveries[index]?.number);
+
+    if (
+      testforspace ||
+      (deliveries[index]?.number && deliveries[index]?.number?.length >= 10)
+    ) {
+      //TODO: this is for Ghana number implentation
       (async () => {
         setFetching(true);
         const { data } = await axios.post("/api/customer-details", {
-          phone: deliveries[index]?.number,
+          phone: encodeURIComponent(deliveries[index]?.number),
         });
 
         // console.log(data);
