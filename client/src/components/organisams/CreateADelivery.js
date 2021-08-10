@@ -240,14 +240,6 @@ const CreateADelivery = ({
             placeholder="Enter recipient's number"
             {...register(`deliveries[${index}].number`, {
               required: `Recipient number is required`,
-              minLength: {
-                value: 10,
-                message: `Must be 10 characters`,
-              },
-              maxLength: {
-                value: 10,
-                message: `Must be 10 characters`,
-              },
             })}
             type="text"
             defaultValue={number}
@@ -263,6 +255,10 @@ const CreateADelivery = ({
                       onClick={() => {
                         setValue("customerDetails", customer);
                         setOpenCustomerDiv(false);
+                        // setValue(
+                        //   `deliveries[${index}].number`,
+                        //   customer?.customer_phone
+                        // );
                       }}
                     >
                       <span className="mr-2">{customer?.customer_name}</span>
