@@ -58,7 +58,7 @@ function App() {
     checkAuth();
   }, [checkAuth]);
 
-  let ComponentToRender = <div>Hello</div>;
+  let ComponentToRender = <div>Welcome To Digistore Deliveries</div>;
 
   if (loading) {
     ComponentToRender = Spinner;
