@@ -126,24 +126,28 @@ const CreateADelivery = ({
     const space = new RegExp("\\s");
     const testforspace = space.test(deliveries[index]?.number);
 
+    if (!deliveries[index]?.number || deliveries[index]?.number.length === 0) {
+      setOpenCustomerDiv(false);
+    }
+
     if (
       testforspace ||
-      (deliveries[index]?.number && deliveries[index]?.number?.length >= 10)
+      (deliveries[index]?.number && deliveries[index]?.number?.length >= 10) //TODO: this is for Ghana number implentation
     ) {
-      //TODO: this is for Ghana number implentation
       (async () => {
         setFetching(true);
         const { data } = await axios.post("/api/customer-details", {
           phone: encodeURIComponent(deliveries[index]?.number),
         });
 
-        // console.log(data);
+        console.log(data);
         if (Number(data?.status) === 0) {
-          setCustomerData(data?.data);
-
-          // if (customerData) {
-          setOpenCustomerDiv(true);
-          // }
+          if (data?.data && data?.data?.length > 0) {
+            setCustomerData(data?.data);
+            setOpenCustomerDiv(true);
+          } else {
+            setOpenCustomerDiv(false);
+          }
         } else {
           setOpenCustomerDiv(false);
           setCustomerData(null);
@@ -248,16 +252,23 @@ const CreateADelivery = ({
           />
 
           {openCustomerDiv && (
-            <div className="flex absolute top-[60px] left-0 h-[100px] w-full border border-gray-500 rounded p-2 bg-gray-100 z-50 overflow-scroll cursor-pointer">
-              <p
-                onClick={() => {
-                  setValue("customerDetails", customerData);
-                  setOpenCustomerDiv(false);
-                }}
-              >
-                <span>{customerData?.customer_name}</span>{" "}
-                <span className="text-sm">{customerData?.customer_phone}</span>
-              </p>
+            <div className=" absolute top-[60px] left-0 h-[100px] w-full border border-gray-500 rounded p-2 bg-gray-100 z-50 overflow-scroll cursor-pointer">
+              {customerData?.map((customer) => {
+                return (
+                  <div key={customer?.customer_id}>
+                    <p
+                      className="text-xs my-2"
+                      onClick={() => {
+                        setValue("customerDetails", customer);
+                        setOpenCustomerDiv(false);
+                      }}
+                    >
+                      <span className="mr-2">{customer?.customer_name}</span>
+                      <span>{customer?.customer_phone}</span>
+                    </p>
+                  </div>
+                );
+              })}
             </div>
           )}
         </div>
