@@ -68,7 +68,7 @@ export function TableExample({ orders }) {
                       : "N/A"}
                   </Td>
                   <Td>{order?.total_amount}</Td>
-                  <Td>{order?.customer_name}</Td>
+                  <Td>{order?.customer_name || "N/A"}</Td>
                   <Td>{order?.recipient_contact}</Td>
                   <Td>{order?.created_by_name}</Td>
                 </Tr>
@@ -123,6 +123,8 @@ const TrackRequest = () => {
           end_date: format(formCurrentValues?.endDate, "dd-MM-yyyy"),
         };
 
+        // console.log(data);
+
         const allOrdersRes = await axios.post("/api/get-orders", data);
         const { data: allOrdersResData } = await allOrdersRes.data;
 
@@ -135,7 +137,7 @@ const TrackRequest = () => {
     };
 
     fetchItems();
-  }, []);
+  }, [getValues, user?.user_merchant_id]);
 
   const handleSubmitQuery = async (values) => {
     try {

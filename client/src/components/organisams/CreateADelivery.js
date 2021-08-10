@@ -85,6 +85,8 @@ const CreateADelivery = ({
               const price = get(data, "price", 0);
               data = { ...data, price: Number(parseFloat(price)) };
 
+              // console.log(data);
+
               setValue(`deliveryFee`, data);
             } else {
               toast.error(
@@ -140,7 +142,7 @@ const CreateADelivery = ({
           phone: encodeURIComponent(deliveries[index]?.number),
         });
 
-        console.log(data);
+        // console.log(data);
         if (Number(data?.status) === 0) {
           if (data?.data && data?.data?.length > 0) {
             setCustomerData(data?.data);
