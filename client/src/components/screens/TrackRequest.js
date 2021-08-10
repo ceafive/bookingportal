@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { useApp } from "../../ctx/App";
 import { useAuth } from "../../ctx/Auth";
 import axios from "axios";
-import { filter } from "lodash";
+import { capitalize, filter } from "lodash";
 import ShowRequestDetail from "./ShowRequestDetail";
 
 export function TableExample({ orders, setShowDetails, setOrderToShow }) {
@@ -19,7 +19,7 @@ export function TableExample({ orders, setShowDetails, setOrderToShow }) {
               <div key={order?.order_no}>
                 <div
                   onClick={() => {
-                    console.log(order);
+                    // console.log(order);
                     setOrderToShow(order);
                     setShowDetails(true);
                   }}
@@ -34,8 +34,9 @@ export function TableExample({ orders, setShowDetails, setOrderToShow }) {
                     <p>Payment Number: {order?.recipient_contact || ""}</p>
                     <p></p>
                   </div>
-                  <div>
-                    <p>GHS{order?.total_amount}</p>
+                  <div className="justify-self-end">
+                    <p className="justify-self-end">GHS{order?.total_amount}</p>
+                    <p>{capitalize(order?.order_status_desc)}</p>
                   </div>
                 </div>
                 <div className="h-[1px] bg-gray-100"></div>

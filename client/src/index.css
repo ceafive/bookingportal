@@ -906,6 +906,14 @@ video {
   justify-content: space-between;
 }
 
+.self-end{
+  align-self: flex-end;
+}
+
+.justify-self-end{
+  justify-self: end;
+}
+
 .overflow-scroll{
   overflow: scroll;
 }
