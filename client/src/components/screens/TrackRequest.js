@@ -1,81 +1,48 @@
 import React from "react";
-import { format, startOfMonth } from "date-fns";
+import { format, startOfMonth, startOfQuarter } from "date-fns";
 
-import { Table, Thead, Tbody, Tr, Th, Td } from "react-super-responsive-table";
 import { useForm } from "react-hook-form";
 import { useApp } from "../../ctx/App";
 import { useAuth } from "../../ctx/Auth";
 import axios from "axios";
 import { filter } from "lodash";
+import ShowRequestDetail from "./ShowRequestDetail";
 
-export function TableExample({ orders }) {
+export function TableExample({ orders, setShowDetails, setOrderToShow }) {
   // console.log(orders);
   return (
     <>
-      {" "}
       {orders?.length > 1 ? (
-        <Table>
-          <Thead>
-            <Tr>
-              <Th>Order No.</Th>
-              <Th>Order Date</Th>
-              <Th>Order Amount</Th>
-              <Th>Discount</Th>
-              <Th>Order Items</Th>
-              <Th>Order Status</Th>
-              <Th>Order Outlet</Th>
-              <Th>Order Source</Th>
-              <Th>Order Notes</Th>
-              <Th>Order Invoice</Th>
-              <Th>Delivery Type</Th>
-              <Th>Delivery Fee</Th>
-              <Th>Delivery Location</Th>
-              <Th>Delivery Notes</Th>
-              <Th>Delivery Rider</Th>
-              <Th>Total Amount</Th>
-              <Th>Customer Name</Th>
-              <Th>Phone Number</Th>
-              <Th>Created By</Th>
-            </Tr>
-          </Thead>
-
-          <Tbody>
-            {orders?.map((order) => {
-              return (
-                <Tr key={order?.order_no}>
-                  <Td>{order?.order_no}</Td>
-                  <Td>
-                    {format(
-                      new Date(order?.order_date ?? ""),
-                      "iii, d MMM yy h:mmaaa"
-                    )}
-                  </Td>
-                  <Td>{order?.order_amount}</Td>
-                  <Td>{order?.order_discount}</Td>
-                  <Td>{order?.order_items}</Td>
-                  <Td>{order?.order_status_desc}</Td>
-                  <Td>{order?.delivery_outlet}</Td>
-                  <Td>{order?.order_source_desc}</Td>
-                  <Td>{order?.customer_notes || "N/A"}</Td>
-                  <Td>{order?.payment_invoice}</Td>
-                  <Td>{order?.delivery_type}</Td>
-                  <Td>{order?.delivery_charge}</Td>
-                  <Td>{order?.delivery_location}</Td>
-                  <Td>{order?.delivery_notes || "N/A"}</Td>
-                  <Td>
-                    {order?.delivery_type === "DELIVERY"
-                      ? order?.delivery_rider_name || "N/A"
-                      : "N/A"}
-                  </Td>
-                  <Td>{order?.total_amount}</Td>
-                  <Td>{order?.customer_name || "N/A"}</Td>
-                  <Td>{order?.recipient_contact}</Td>
-                  <Td>{order?.created_by_name}</Td>
-                </Tr>
-              );
-            })}
-          </Tbody>
-        </Table>
+        <>
+          {orders?.map((order) => {
+            return (
+              <div key={order?.order_no}>
+                <div
+                  onClick={() => {
+                    console.log(order);
+                    setOrderToShow(order);
+                    setShowDetails(true);
+                  }}
+                  key={order?.order_no}
+                  className="flex justify-between w-full mt-2 px-2 text-xs text-gray-700"
+                >
+                  <div>
+                    <p>{order?.payment_invoice}</p>
+                    <p>Fee. Amt: GHS{order?.fee_charge}</p>
+                    <p>Set. Amt: GHS {order?.order_amount}</p>
+                    <p>Date {order?.order_date}</p>
+                    <p>Payment Number: {order?.recipient_contact || ""}</p>
+                    <p></p>
+                  </div>
+                  <div>
+                    <p>GHS{order?.total_amount}</p>
+                  </div>
+                </div>
+                <div className="h-[1px] bg-gray-100"></div>
+              </div>
+            );
+          })}
+        </>
       ) : (
         <p className="text-center">No items</p>
       )}
@@ -99,6 +66,8 @@ const TrackRequest = () => {
   });
   const [fetching, setFetching] = React.useState(false);
   const [orders, setOrders] = React.useState([]);
+  const [showDetails, setShowDetails] = React.useState(false);
+  const [orderToShow, setOrderToShow] = React.useState(null);
   //   console.log(orders);
 
   const {
@@ -159,10 +128,20 @@ const TrackRequest = () => {
     }
   };
 
+  if (showDetails && orderToShow) {
+    return (
+      <ShowRequestDetail
+        order={orderToShow}
+        setShowDetails={setShowDetails}
+        setOrderToShow={setOrderToShow}
+      />
+    );
+  }
+
   return (
     <div className="relative min-h-screen w-full">
-      <div className="absolute top-[100px] w-full pb-4 px-3">
-        <div className="w-full">
+      <div className="absolute top-[100px] w-full pb-4">
+        <div className="w-full px-3">
           <div className="flex w-full sm:w-auto justify-center items-center">
             <div className="flex w-full sm:w-auto">
               <input
@@ -173,7 +152,8 @@ const TrackRequest = () => {
                 })}
                 max={format(new Date(), "yyyy-MM-dd")}
                 type="date"
-                defaultValue={format(startOfMonth(new Date()), "yyyy-MM-dd")}
+                defaultValue={format(startOfQuarter(new Date()), "yyyy-MM-dd")}
+                // defaultValue={format(startOfMonth(new Date()), "yyyy-MM-dd")}
               />
               <p className="text-red-500 text-xs">
                 {errors?.startDate?.message}
@@ -209,7 +189,11 @@ const TrackRequest = () => {
         </div>
 
         <div className="mt-4">
-          <TableExample orders={orders} />
+          <TableExample
+            orders={orders}
+            setShowDetails={setShowDetails}
+            setOrderToShow={setOrderToShow}
+          />
         </div>
       </div>
     </div>

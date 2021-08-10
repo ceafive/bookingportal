@@ -246,7 +246,7 @@ const CreateADelivery = ({
           />
 
           {openCustomerDiv && (
-            <div className=" absolute top-[60px] left-0 h-[100px] w-full border border-gray-500 rounded p-2 bg-gray-100 z-50 overflow-scroll cursor-pointer">
+            <div className="mt-1 h-[100px] w-full border border-gray-500 rounded p-2 bg-gray-100 z-50 overflow-scroll cursor-pointer">
               {customerData?.map((customer) => {
                 return (
                   <div key={customer?.customer_id}>
