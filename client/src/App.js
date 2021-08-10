@@ -49,7 +49,7 @@ function App() {
   const deliveryIsOpen =
     process.env.NODE_ENV === "production"
       ? currentTime > startTime && currentTime < endTime
-      : true;
+      : false;
   // console.log(deliveryIsOpen);
 
   useEffect(() => {
