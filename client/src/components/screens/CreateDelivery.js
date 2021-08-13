@@ -212,7 +212,7 @@ const CreateDelivery = () => {
             delivery_contact: val?.number,
             delivery_email:
               "customerDetails" in values
-                ? values?.customerDetails?.customer_email ?? ""
+                ? values?.customerDetails?.customer_email || ""
                 : "",
             // delivery_charge: 1,
             delivery_charge: values?.deliveryFee?.price,
@@ -348,7 +348,7 @@ const CreateDelivery = () => {
   if (appLoading) {
     return (
       <div className="flex flex-wrap justify-center items-center">
-        <Spinner width={30} height={30} />
+        <Spinner width={50} height={50} color="rgba(5, 150, 105)" />
       </div>
     );
   }

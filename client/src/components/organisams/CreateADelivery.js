@@ -406,7 +406,7 @@ const CreateADelivery = ({
                 <div className="inline-block mr-2">
                   <Spinner
                     type={"TailSpin"}
-                    color="black"
+                    color="rgba(5, 150, 105)"
                     width="10"
                     height="10"
                   />
