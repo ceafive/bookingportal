@@ -1,12 +1,17 @@
 import React from "react";
-import { format, startOfMonth, startOfQuarter } from "date-fns";
+import { format, startOfQuarter } from "date-fns";
 
 import { useForm } from "react-hook-form";
-import { useApp } from "../../ctx/App";
 import { useAuth } from "../../ctx/Auth";
 import axios from "axios";
-import { capitalize, filter } from "lodash";
+import { capitalize, filter, upperCase } from "lodash";
 import ShowRequestDetail from "./ShowRequestDetail";
+
+const statusColors = {
+  NEW: "blue-500",
+  CANCELLED: "red-500",
+  DELIVERED: "green-500",
+};
 
 export function TableExample({ orders, setShowDetails, setOrderToShow }) {
   // console.log(orders);
@@ -18,25 +23,38 @@ export function TableExample({ orders, setShowDetails, setOrderToShow }) {
             return (
               <div key={order?.order_no}>
                 <div
-                  onClick={() => {
-                    // console.log(order);
-                    setOrderToShow(order);
-                    setShowDetails(true);
-                  }}
                   key={order?.order_no}
                   className="flex justify-between w-full mt-2 px-2 text-xs text-gray-700"
                 >
-                  <div>
-                    <p>{order?.payment_invoice}</p>
-                    <p>Fee. Amt: GHS{order?.fee_charge}</p>
-                    <p>Set. Amt: GHS {order?.order_amount}</p>
-                    <p>Date {order?.order_date}</p>
-                    <p>Payment Number: {order?.recipient_contact || ""}</p>
-                    <p></p>
+                  <div className="flex items-center">
+                    <div className="mr-5">
+                      <button
+                        className="outline-none text-lg"
+                        onClick={() => {
+                          setOrderToShow(order);
+                          setShowDetails(true);
+                        }}
+                      >
+                        <ion-icon name="eye-outline" className="text-lg" />
+                      </button>
+                    </div>
+                    <div>
+                      <p>Invoice: {order?.order_no}</p>
+                      <p>Date: {order?.order_date}</p>
+                      <p>Delivery Amount: {order?.delivery_charge || ""}</p>
+                    </div>
                   </div>
-                  <div className="justify-self-end">
-                    <p className="justify-self-end">GHS{order?.total_amount}</p>
-                    <p>{capitalize(order?.order_status_desc)}</p>
+                  <div className="justify-end">
+                    <p className="font-bold text-right">
+                      GHS{order?.total_amount}
+                    </p>
+                    <p
+                      className={`font-bold text-right text-${
+                        statusColors[order?.order_status_desc]
+                      }`}
+                    >
+                      {order?.order_status_desc}
+                    </p>
                   </div>
                 </div>
                 <div className="h-[1px] bg-gray-100"></div>
@@ -73,13 +91,7 @@ const TrackRequest = () => {
 
   const {
     state: { user },
-    actions: {},
   } = useAuth();
-
-  const {
-    state: {},
-    actions: {},
-  } = useApp();
 
   React.useEffect(() => {
     const fetchItems = async () => {

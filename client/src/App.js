@@ -1,4 +1,10 @@
-import { useEffect } from "react";
+import {
+  useEffect,
+  useState,
+  cloneElement,
+  createElement,
+  useCallback,
+} from "react";
 import Spinner from "./components/atoms/Spinner";
 import CreateDelivery from "./components/screens/CreateDelivery";
 import Login from "./components/screens/Login";
@@ -39,7 +45,8 @@ function App() {
     state: { componentToRender },
     actions: { setComponentToRender },
   } = useApp();
-  // console.log({ isLoggedIn, loading, user });
+
+  // console.log({ componentToRender });
 
   const newDate = new Date();
   const startTime = "07:00:00";
@@ -58,30 +65,29 @@ function App() {
     checkAuth();
   }, [checkAuth]);
 
-  let ComponentToRender = <div>Welcome To Digistore Deliveries</div>;
-
-  if (loading) {
-    ComponentToRender = Spinner;
-  }
-
-  if (!loading && !isLoggedIn) {
-    ComponentToRender = Login;
-  }
-
-  if (!loading && isLoggedIn && !deliveryIsOpen) {
-    ComponentToRender = ClosedMessage;
-  }
-
-  if (!loading && isLoggedIn && deliveryIsOpen) {
-    ComponentToRender =
-      componentToRender === "raise" ? (
-        CreateDelivery
-      ) : componentToRender === "track" ? (
-        TrackRequest
-      ) : (
-        <></>
-      );
-  }
+  const switchComponentToRender = useCallback(() => {
+    switch (loading) {
+      case true:
+        return <Spinner key={1} width={30} height={30} />;
+      case false:
+        if (!isLoggedIn) {
+          return <Login key={2} />;
+        } else {
+          if (!deliveryIsOpen) {
+          } else {
+            if (componentToRender === "raise") {
+              return <CreateDelivery key={3} />;
+            }
+            if (componentToRender === "track") {
+              return <TrackRequest key={4} />;
+            }
+          }
+        }
+        break;
+      default:
+        return <div>Welcome To Digistore Deliveries</div>;
+    }
+  }, [componentToRender, deliveryIsOpen, isLoggedIn, loading]);
 
   return (
     <Sentry.ErrorBoundary fallback={myFallback} showDialog>
@@ -147,7 +153,8 @@ function App() {
             </div>
           </Header>
         )}
-        <ComponentToRender width={30} height={30} />
+        {switchComponentToRender()}
+        {/* <ComponentToRender width={30} height={30} /> */}
         <Toaster />
       </div>
     </Sentry.ErrorBoundary>

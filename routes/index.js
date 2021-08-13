@@ -96,6 +96,11 @@ router.post("/process-payment", async function (req, res, next) {
   return await postHandler(req, res, `/orders/payment/process`, req.body);
 });
 
+/* POST add customer */
+router.post("/add-customer", async function (req, res, next) {
+  return await postHandler(req, res, `/customers/merchant/customer`, req.body);
+});
+
 /* GET order history */
 router.post("/get-orders", async function (req, res, next) {
   const { merchant, start_date, end_date } = req.body;

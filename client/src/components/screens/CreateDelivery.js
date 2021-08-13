@@ -1,7 +1,5 @@
 import React from "react";
-import Logo from "../atoms/Logo";
 import Button from "../atoms/Button";
-import Header from "../molecules/Header";
 import Label from "../molecules/Label";
 import Select from "../atoms/Select";
 import { useAuth } from "../../ctx/Auth";
@@ -12,13 +10,12 @@ import { useFieldArray, useForm } from "react-hook-form";
 import CollectMomo from "../organisams/CollectMomo";
 import toast from "react-hot-toast";
 import StatusCheck from "../organisams/StatusCheck";
-import { throttle, upperCase } from "lodash";
+import { upperCase } from "lodash";
 import Spinner from "../atoms/Spinner";
 
 const CreateDelivery = () => {
   const {
     state: { user },
-    actions: { logoutUser },
   } = useAuth();
 
   const {
@@ -58,7 +55,7 @@ const CreateDelivery = () => {
   const [ticking, setTicking] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const [confirmButtonText, setConfirmButtonText] = React.useState("");
-  const [processError, setProcessError] = React.useState(false);
+  const [processError, setProcessError] = React.useState("");
 
   const statusCheckTotalRunTime = 60000;
 
@@ -113,76 +110,76 @@ const CreateDelivery = () => {
   //   }
   // }, []);
 
-  const onBookDelivery = async (values) => {
-    try {
-      setFetching(true);
-      const outletSelected = JSON.parse(values?.outletSelected);
-      const deliveries = values?.deliveries?.reduce((acc, val, index) => {
-        const items = val?.items
-          ?.split(",")
-          .filter((item) => Boolean(item))
-          .reduce((acc, item, index) => {
-            return {
-              ...acc,
-              [index]: {
-                delivery_item: item.trim(),
-              },
-            };
-          }, {});
+  // const onBookDelivery = async (values) => {
+  //   try {
+  //     setFetching(true);
+  //     const outletSelected = JSON.parse(values?.outletSelected);
+  //     const deliveries = values?.deliveries?.reduce((acc, val, index) => {
+  //       const items = val?.items
+  //         ?.split(",")
+  //         .filter((item) => Boolean(item))
+  //         .reduce((acc, item, index) => {
+  //           return {
+  //             ...acc,
+  //             [index]: {
+  //               delivery_item: item.trim(),
+  //             },
+  //           };
+  //         }, {});
 
-        return {
-          ...acc,
-          [index]: {
-            delivery_location: values?.deliveryInputValue?.label,
-            delivery_gps: values?.coordinates,
-            delivery_name:
-              "customerDetails" in values
-                ? values?.customerDetails?.customer_name
-                : "",
-            delivery_contact: val?.number,
-            delivery_email:
-              "customerDetails" in values
-                ? values?.customerDetails?.customer_email ?? ""
-                : "",
-            delivery_charge: values?.deliveryFee?.price,
-            delivery_items: items,
-            delivery_notes: val?.notes ?? "",
-          },
-        };
-      }, {});
+  //       return {
+  //         ...acc,
+  //         [index]: {
+  //           delivery_location: values?.deliveryInputValue?.label,
+  //           delivery_gps: values?.coordinates,
+  //           delivery_name:
+  //             "customerDetails" in values
+  //               ? values?.customerDetails?.customer_name
+  //               : "",
+  //           delivery_contact: val?.number,
+  //           delivery_email:
+  //             "customerDetails" in values
+  //               ? values?.customerDetails?.customer_email ?? ""
+  //               : "",
+  //           delivery_charge: values?.deliveryFee?.price,
+  //           delivery_items: items,
+  //           delivery_notes: val?.notes ?? "",
+  //         },
+  //       };
+  //     }, {});
 
-      const data = {
-        merchant: user?.user_merchant_id,
-        delivery_type: "DELIVERY",
-        delivery_outlet: outletSelected?.outlet_id,
-        deliveries: JSON.stringify(deliveries),
-        total_amount: values?.totalAmount?.total,
-        service_charge: values?.totalAmount?.charge,
-        payment_type: values?.paymentOption === "VISAG" ? "CARD" : "MOMO",
-        payment_number: values?.momoNumberOrEmailAddress,
-        payment_network: values?.paymentOption,
-        source: "INSHP",
-        mod_by: user?.login,
-      };
+  //     const data = {
+  //       merchant: user?.user_merchant_id,
+  //       delivery_type: "DELIVERY",
+  //       delivery_outlet: outletSelected?.outlet_id,
+  //       deliveries: JSON.stringify(deliveries),
+  //       total_amount: values?.totalAmount?.total,
+  //       service_charge: values?.totalAmount?.charge,
+  //       payment_type: values?.paymentOption === "VISAG" ? "CARD" : "MOMO",
+  //       payment_number: values?.momoNumberOrEmailAddress,
+  //       payment_network: values?.paymentOption,
+  //       source: "INSHP",
+  //       mod_by: user?.login,
+  //     };
 
-      // console.log(data);
-      // return;
-      const { data: resData } = await axios.post("/api/raise-order", data);
-      // console.log({ resData });
+  //     // console.log(data);
+  //     // return;
+  //     const { data: resData } = await axios.post("/api/raise-order", data);
+  //     // console.log({ resData });
 
-      if (Number(resData?.status) !== 0) {
-        toast.error(resData?.message);
-      } else {
-        setStatusText({ invoice: resData?.invoice, message: resData?.message });
-        setStep(2);
-        // toast.success(resData?.message);
-      }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setFetching(false);
-    }
-  };
+  //     if (Number(resData?.status) !== 0) {
+  //       toast.error(resData?.message);
+  //     } else {
+  //       setStatusText({ invoice: resData?.invoice, message: resData?.message });
+  //       setStep(2);
+  //       // toast.success(resData?.message);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   } finally {
+  //     setFetching(false);
+  //   }
+  // };
 
   const onRaiseOrder = async (values) => {
     try {
@@ -240,10 +237,16 @@ const CreateDelivery = () => {
       // return;
       const { data: resData } = await axios.post("/api/raise-order", data);
 
+      // console.log(resData);
+
       if (Number(resData?.status) !== 0) {
         toast.error(resData?.message);
       } else {
-        setStatusText({ invoice: resData?.invoice, message: resData?.message });
+        setStatusText({
+          invoice: resData?.invoice,
+          message: resData?.message,
+          order: resData?.order,
+        });
         setStep(1);
         // toast.success(resData?.message);
       }
@@ -265,9 +268,9 @@ const CreateDelivery = () => {
   // console.log(user);
   // console.log(errors);
 
-  const sleep = (ms) => {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  };
+  // const sleep = (ms) => {
+  //   return new Promise((resolve) => setTimeout(resolve, ms));
+  // };
 
   React.useEffect(() => {
     const verifyTransaction = async (firstTimeStarted) => {
@@ -301,6 +304,16 @@ const CreateDelivery = () => {
             setFetching(false);
             setTicking(false);
           }
+        } else if (message === "paid") {
+          setConfirmButtonText("Start New Delivery");
+          setProcessError(`Delivery Request Payment Successful`);
+          setFetching(false);
+          setTicking(false);
+        } else if (message === "failed") {
+          setConfirmButtonText("Start New Delivery");
+          setProcessError(`Delivery Request Payment Failed`);
+          setFetching(false);
+          setTicking(false);
         } else {
           setConfirmButtonText("Start New Delivery");
           setProcessError(`${upperCase(message)} TRANSACTION`);
@@ -312,27 +325,15 @@ const CreateDelivery = () => {
       }
     };
 
-    // if (ticking) {
-    //   throttle(verifyTransaction, 50000, {
-    //     trailing: false,
-    //   })();
-    // }
-
-    // I want to call a Javascript function x times for y seconds
     if (ticking) {
       verifyTransaction(Date.now());
       var started = Date.now();
-      // make it loop every 10 seconds
-      var interval = setInterval(function () {
-        // for 30 seconds
-        if (Date.now() - started > statusCheckTotalRunTime) {
-          // and then pause it
+
+      var interval = setInterval(() => {
+        if (Date.now() - started > statusCheckTotalRunTime)
           clearInterval(interval);
-        } else {
-          // the thing to do every 10 seconds
-          verifyTransaction(started);
-        }
-      }, 10000); // every 10 seconds
+        else verifyTransaction(started);
+      }, 10000);
     }
   }, [statusText?.invoice, ticking]);
 
@@ -347,8 +348,7 @@ const CreateDelivery = () => {
   if (appLoading) {
     return (
       <div className="flex flex-wrap justify-center items-center">
-        <Spinner width={20} height={20} />
-        <p className="w-full">Loading</p>
+        <Spinner width={30} height={30} />
       </div>
     );
   }

@@ -89,7 +89,11 @@ const CollectMomo = ({
       if (Number(resData?.status) !== 0) {
         toast.error(resData?.message);
       } else {
-        setStatusText({ invoice: resData?.invoice, message: resData?.message });
+        setStatusText({
+          ...statusText,
+          invoice: resData?.invoice,
+          message: resData?.message,
+        });
         setStep(2);
       }
     } catch (error) {
@@ -201,6 +205,16 @@ const CollectMomo = ({
   return (
     <div className="w-full">
       <div className="flex flex-col items-center">
+        <div className="mb-5">
+          <p>
+            Delivery Order No:{" "}
+            <span className="font-bold">{statusText?.order}</span>
+          </p>
+          {/* <p>
+            Payment Invoice No:{" "}
+            <span className="font-bold">{statusText?.invoice}</span>
+          </p> */}
+        </div>
         <div className="w-10/12">
           <div className="flex flex-col items-center w-full">
             <div className="w-full mb-2 ">
@@ -466,7 +480,7 @@ const CollectMomo = ({
           {!fetchingDeliveryCharge && (
             <div className="my-4">
               <p>
-                Your total delivery fees is{" "}
+                Your total delivery fee is{" "}
                 <span className="text-green-500 font-bold">
                   GHS {deliveryCharge?.total}
                 </span>

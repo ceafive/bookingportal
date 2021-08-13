@@ -1,4 +1,6 @@
 import React from "react";
+import { useApp } from "../../ctx/App";
+import Button from "../atoms/Button";
 import ButtonSpinner from "../molecules/ButtonSpinner";
 
 const StatusCheck = ({
@@ -17,16 +19,29 @@ const StatusCheck = ({
   append,
   setProcessError,
 }) => {
+  const {
+    actions: { setComponentToRender },
+  } = useApp();
+
   return (
     <div className="text-center px-10">
-      <p className="my-4 font-bold">Transaction ID: {statusText?.invoice} </p>
+      <div className="mb-5">
+        <p>
+          Delivery Order No:{" "}
+          <span className="font-bold">{statusText?.order}</span>
+        </p>
+        <p>
+          Payment Invoice No:{" "}
+          <span className="font-bold">{statusText?.invoice}</span>
+        </p>
+      </div>
       {processError ? (
         <p
           dangerouslySetInnerHTML={{ __html: processError }}
           className={`text-center text-sm ${
-            processError.includes("FAILED") || processError.includes("Sorry")
-              ? `text-red-500`
-              : `text-green-500`
+            processError?.includes("Delivery Request Payment Successful")
+              ? `text-green-500`
+              : `text-red-500`
           } `}
         />
       ) : (
@@ -37,6 +52,15 @@ const StatusCheck = ({
       )}
 
       <div className="mt-4">
+        {processError?.includes("Delivery Request Payment Successful") && (
+          <Button
+            onClick={() => {
+              setComponentToRender("track");
+            }}
+            btnText="Track Request"
+            btnClasses="mb-2 bg-blue-800 text-white"
+          />
+        )}
         <ButtonSpinner
           processing={fetching}
           onClick={() => {

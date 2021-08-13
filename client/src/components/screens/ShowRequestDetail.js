@@ -1,6 +1,6 @@
 import React from "react";
 import { Table, Thead, Tbody, Tr, Th, Td } from "react-super-responsive-table";
-import { format, startOfMonth } from "date-fns";
+import { format } from "date-fns";
 
 const ShowRequestDetail = ({ order, setShowDetails, setOrderToShow }) => {
   return (
