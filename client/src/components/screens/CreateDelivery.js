@@ -372,7 +372,7 @@ const CreateDelivery = () => {
                   <Select
                     selectClasses="!px-2"
                     {...register("outletSelected", {
-                      required: `Select pickup location`,
+                      required: `Pickup location is required`,
                     })}
                     data={[
                       {

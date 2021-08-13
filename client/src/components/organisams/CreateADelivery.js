@@ -542,7 +542,7 @@ const CreateADelivery = ({
       </div>
 
       <div className="w-full mt-4">
-        <Label text="Items to be delivered" />
+        <Label text="Items to be delivered [use comma (,) to separate various items]" />
         <Input
           inputClasses="!border !border-gray-500 !shadow-none hover:focus:!ring-0"
           placeholder="Enter item(s) to be delivered "
