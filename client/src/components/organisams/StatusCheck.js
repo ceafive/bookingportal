@@ -52,7 +52,8 @@ const StatusCheck = ({
       )}
 
       <div className="mt-4">
-        {processError?.includes("Delivery Request Payment Successful") && (
+        {(processError?.includes("Delivery Request Payment Successful") ||
+          processError?.includes("Sorry")) && (
           <Button
             onClick={() => {
               setComponentToRender("track");
