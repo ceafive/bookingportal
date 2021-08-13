@@ -1,10 +1,4 @@
-import {
-  useEffect,
-  useState,
-  cloneElement,
-  createElement,
-  useCallback,
-} from "react";
+import { useEffect, useCallback } from "react";
 import Spinner from "./components/atoms/Spinner";
 import CreateDelivery from "./components/screens/CreateDelivery";
 import Login from "./components/screens/Login";
@@ -74,6 +68,7 @@ function App() {
           return <Login key={2} />;
         } else {
           if (!deliveryIsOpen) {
+            return <ClosedMessage key={5} />;
           } else {
             if (componentToRender === "raise") {
               return <CreateDelivery key={3} />;

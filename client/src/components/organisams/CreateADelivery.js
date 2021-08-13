@@ -9,7 +9,6 @@ import toast from "react-hot-toast";
 import tailwind from "tailwind-rn";
 import { Controller, useForm } from "react-hook-form";
 import Modal from "../molecules/Modal";
-import { format } from "morgan";
 import { useAuth } from "../../ctx/Auth";
 
 const CreateADelivery = ({
@@ -47,11 +46,6 @@ const CreateADelivery = ({
   });
 
   const [processing, setProcessing] = React.useState(false);
-  const [loginError, setLoginError] = React.useState({
-    status: false,
-    message: "",
-  });
-
   const [modalIsOpen, setIsOpen] = React.useState(false);
 
   let outletSelected = watch("outletSelected");
@@ -239,7 +233,7 @@ const CreateADelivery = ({
       // console.log(userData);
 
       const response = await axios.post("/api/add-customer", userData);
-      const { status, message } = await response.data;
+      const { status } = await response.data;
 
       // console.log(status, message);
 
@@ -396,9 +390,6 @@ const CreateADelivery = ({
           </div>
 
           <div className="text-center mt-6">
-            {loginError.status && (
-              <p className="text-sm text-red-500">{loginError.message}</p>
-            )}
             <button
               disabled={processing}
               className={`${

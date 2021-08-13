@@ -4,7 +4,7 @@ import { format, startOfQuarter } from "date-fns";
 import { useForm } from "react-hook-form";
 import { useAuth } from "../../ctx/Auth";
 import axios from "axios";
-import { capitalize, filter, upperCase } from "lodash";
+import { filter } from "lodash";
 import ShowRequestDetail from "./ShowRequestDetail";
 
 const statusColors = {
@@ -50,7 +50,7 @@ export function TableExample({ orders, setShowDetails, setOrderToShow }) {
                     </p>
                     <p
                       className={`font-bold text-right text-${
-                        statusColors[order?.order_status_desc]
+                        statusColors[order?.order_status_desc] || `gray`
                       }`}
                     >
                       {order?.order_status_desc}
