@@ -207,7 +207,7 @@ const CreateDelivery = () => {
             delivery_gps: values?.coordinates,
             delivery_name:
               "customerDetails" in values
-                ? values?.customerDetails?.customer_name
+                ? values?.customerDetails?.customer_name || ""
                 : "",
             delivery_contact: val?.number,
             delivery_email:
@@ -225,8 +225,8 @@ const CreateDelivery = () => {
       const data = {
         delivery_type: "DELIVERY",
         delivery_outlet: outletSelected?.outlet_id,
+        // deliveries: deliveries,
         deliveries: JSON.stringify(deliveries),
-        // total_amount: 1,
         total_amount: values?.deliveryFee?.price,
         source: "INSHP",
         merchant: user?.user_merchant_id,
