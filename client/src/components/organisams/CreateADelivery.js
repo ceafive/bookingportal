@@ -376,9 +376,23 @@ const CreateADelivery = ({
                   Month
                 </option>
                 {months.map((month) => {
+                  const monthNames = {
+                    1: "January",
+                    2: "February",
+                    3: "March",
+                    4: "April",
+                    5: "May",
+                    6: "June",
+                    7: "July",
+                    8: "August",
+                    9: "September",
+                    10: "October",
+                    11: "November",
+                    12: "December",
+                  };
                   return (
                     <option key={month} value={month}>
-                      {month}
+                      {monthNames[month]}
                     </option>
                   );
                 })}
@@ -406,7 +420,7 @@ const CreateADelivery = ({
                 <div className="inline-block mr-2">
                   <Spinner
                     type={"TailSpin"}
-                    color="rgba(5, 150, 105)"
+                    color="black"
                     width="10"
                     height="10"
                   />
