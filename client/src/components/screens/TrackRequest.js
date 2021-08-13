@@ -11,6 +11,7 @@ const statusColors = {
   NEW: "blue-500",
   CANCELLED: "red-500",
   DELIVERED: "green-500",
+  PAID: "green-500",
 };
 
 export function TableExample({ orders, setShowDetails, setOrderToShow }) {
