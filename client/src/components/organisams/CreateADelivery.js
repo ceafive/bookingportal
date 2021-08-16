@@ -155,20 +155,18 @@ const CreateADelivery = ({
   }, [outletSelected, deliveryInputValue]);
 
   React.useEffect(() => {
-    const space = new RegExp("\\s");
-    const testforspace = space.test(deliveries[index]?.number);
-
-    if (!deliveries[index]?.number || deliveries[index]?.number.length === 0) {
-      setOpenCustomerDiv(false);
+    if (!deliveries[index]?.number || deliveries[index]?.number.length < 10) {
+      // setOpenCustomerDiv(false);
+      setValue(`customerDetails`, null);
     }
 
     if (
-      testforspace ||
-      (deliveries[index]?.number && deliveries[index]?.number?.length >= 10) //TODO: this is for Ghana number implentation
+      deliveries[index]?.number &&
+      deliveries[index]?.number?.length >= 10 //TODO: this is for Ghana number implentation
     ) {
       (async () => {
         setFetching(true);
-        setOpenCustomerDiv(false);
+        // setOpenCustomerDiv(false);
         setShowAddUserButton({
           status: false,
           text: `Add Customer`,
@@ -178,13 +176,18 @@ const CreateADelivery = ({
           phone: encodeURIComponent(deliveries[index]?.number),
         });
 
-        // console.log(data);
+        // console.log(data?.data[0]);
         if (Number(data?.status) === 0) {
           if (data?.data && data?.data?.length > 0) {
             setCustomerData(data?.data);
-            setOpenCustomerDiv(true);
+            if (data?.data[0]) {
+              setValue(`customerDetails`, data?.data[0]);
+            }
+            // setValue("customerDetails", customer);
+            // setOpenCustomerDiv(true);
           } else {
-            setOpenCustomerDiv(false);
+            // setOpenCustomerDiv(false);
+            setValue(`customerDetails`, null);
           }
         } else if (Number(data?.status) === 91) {
           toast.error(data?.message);
@@ -193,8 +196,10 @@ const CreateADelivery = ({
             text: `Add Customer`,
           });
         } else {
-          setOpenCustomerDiv(false);
-          setCustomerData(null);
+          toast.error(data?.message);
+          // setOpenCustomerDiv(false);
+          // setCustomerData(null);
+          setValue(`customerDetails`, null);
         }
         setFetching(false);
       })();
@@ -281,7 +286,7 @@ const CreateADelivery = ({
 
   return (
     <div className="">
-      {/* <h1 className="text-center text-sm text-blue-500 font-bold">
+      {/* <h1 className="text-sm font-bold text-center text-blue-500">
         Delivery Location {index + 1}
       </h1> */}
 
@@ -298,14 +303,14 @@ const CreateADelivery = ({
           });
         }}
       >
-        <div className="flex-auto px-4 lg:px-10 py-10 pt-0">
+        <div className="flex-auto px-4 py-10 pt-0 lg:px-10">
           <div className="relative w-full mb-3">
             <input
               {...registerCustomer("fullName", {
                 required: "Full name is required",
               })}
               type="text"
-              className="border border-gray-500 rounded p-2 placeholder-blueGray-500 text-blueGray-600 bg-white text-sm focus:outline-none focus:ring-0 w-full"
+              className="w-full p-2 text-sm bg-white border border-gray-500 rounded placeholder-blueGray-500 text-blueGray-600 focus:outline-none focus:ring-0"
               placeholder="Full Name"
             />
             <p className="text-sm text-red-500">
@@ -323,7 +328,7 @@ const CreateADelivery = ({
                 },
               })}
               type="number"
-              className="border rounded border-gray-500 p-2 placeholder-blueGray-500 text-blueGray-600 bg-white text-sm focus:outline-none focus:ring-0 w-full"
+              className="w-full p-2 text-sm bg-white border border-gray-500 rounded placeholder-blueGray-500 text-blueGray-600 focus:outline-none focus:ring-0"
               placeholder="Phone Number"
             />
             <p className="text-sm text-red-500">
@@ -335,7 +340,7 @@ const CreateADelivery = ({
             <input
               {...registerCustomer("email")}
               type="email"
-              className="border rounded border-gray-500 p-2 placeholder-blueGray-500 text-blueGray-600 bg-white text-sm focus:outline-none focus:ring-0 w-full"
+              className="w-full p-2 text-sm bg-white border border-gray-500 rounded placeholder-blueGray-500 text-blueGray-600 focus:outline-none focus:ring-0"
               placeholder="Email Address"
             />
             <p className="text-sm text-red-500">
@@ -343,12 +348,12 @@ const CreateADelivery = ({
             </p>
           </div>
 
-          <div className="flex w-full justify-between items-center mb-3">
-            <div className="w-1/2  mr-2">
+          <div className="flex items-center justify-between w-full mb-3">
+            <div className="w-1/2 mr-2">
               <select
                 {...registerCustomer("birthDay")}
                 defaultValue=""
-                className="border rounded border-gray-500 py-2 placeholder-blueGray-500 text-blueGray-600 bg-white text-sm focus:outline-none focus:ring-0 w-full"
+                className="w-full py-2 text-sm bg-white border border-gray-500 rounded placeholder-blueGray-500 text-blueGray-600 focus:outline-none focus:ring-0"
               >
                 <option value="" disabled="disabled">
                   Day
@@ -370,7 +375,7 @@ const CreateADelivery = ({
               <select
                 {...registerCustomer("birthMonth")}
                 defaultValue=""
-                className="border rounded border-gray-500 py-2 placeholder-blueGray-500 text-blueGray-600 bg-white text-sm focus:outline-none focus:ring-0 w-full"
+                className="w-full py-2 text-sm bg-white border border-gray-500 rounded placeholder-blueGray-500 text-blueGray-600 focus:outline-none focus:ring-0"
               >
                 <option value="" disabled="disabled">
                   Month
@@ -403,7 +408,7 @@ const CreateADelivery = ({
             </div>
           </div>
 
-          <div className="text-center mt-6">
+          <div className="mt-6 text-center">
             <button
               disabled={processing}
               className={`${
@@ -426,7 +431,7 @@ const CreateADelivery = ({
                   />
                 </div>
               )}
-              <div className="flex w-full items-center justify-center">
+              <div className="flex items-center justify-center w-full">
                 Add Customer
               </div>
             </button>
@@ -504,6 +509,10 @@ const CreateADelivery = ({
             placeholder="Enter recipient's number"
             {...register(`deliveries[${index}].number`, {
               required: `Recipient number is required`,
+              minLength: {
+                value: 10,
+                message: `Number must be 10 characters`,
+              },
             })}
             type="number"
             defaultValue={number}
@@ -515,7 +524,7 @@ const CreateADelivery = ({
                 return (
                   <div key={customer?.customer_id}>
                     <p
-                      className="text-xs my-2"
+                      className="my-2 text-xs"
                       onClick={() => {
                         setValue("customerDetails", customer);
                         setOpenCustomerDiv(false);
@@ -535,10 +544,11 @@ const CreateADelivery = ({
           )}
 
           {showAddUserButton?.status && (
-            <button onClick={openModal} className="mt-2 text-blue-500 text-sm">
+            <button onClick={openModal} className="mt-2 text-sm text-blue-500">
               {showAddUserButton?.text}
             </button>
           )}
+
           {customerDetails && (
             <div className="w-full mt-4">
               <p>

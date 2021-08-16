@@ -6,6 +6,7 @@ import { useAuth } from "../../ctx/Auth";
 import axios from "axios";
 import { filter } from "lodash";
 import ShowRequestDetail from "./ShowRequestDetail";
+import { createFilter } from "react-search-input";
 
 const statusColors = {
   NEW: "blue-500",
@@ -18,19 +19,19 @@ export function TableExample({ orders, setShowDetails, setOrderToShow }) {
   // console.log(orders);
   return (
     <>
-      {orders?.length > 1 ? (
+      {orders?.length > 0 ? (
         <>
           {orders?.map((order) => {
             return (
               <div key={order?.order_no}>
                 <div
                   key={order?.order_no}
-                  className="flex justify-between w-full mt-2 px-2 text-xs text-gray-700"
+                  className="flex justify-between w-full px-2 mt-2 text-xs text-gray-700"
                 >
                   <div className="flex items-center">
                     <div className="mr-5">
                       <button
-                        className="outline-none text-lg"
+                        className="text-lg outline-none"
                         onClick={() => {
                           setOrderToShow(order);
                           setShowDetails(true);
@@ -86,9 +87,12 @@ const TrackRequest = () => {
   });
   const [fetching, setFetching] = React.useState(false);
   const [orders, setOrders] = React.useState([]);
+  const [filteredOrders, setFilteredOrders] = React.useState(orders);
   const [showDetails, setShowDetails] = React.useState(false);
   const [orderToShow, setOrderToShow] = React.useState(null);
-  //   console.log(orders);
+  const [searchTerm, setSearchTerm] = React.useState("");
+
+  // console.log(filteredOrders);
 
   const {
     state: { user },
@@ -111,7 +115,11 @@ const TrackRequest = () => {
         const allOrdersRes = await axios.post("/api/get-orders", data);
         const { data: allOrdersResData } = await allOrdersRes.data;
 
+        // console.log(allOrdersResData);
+
         setOrders(filter(allOrdersResData, Boolean));
+        setFilteredOrders(filter(allOrdersResData, Boolean));
+        setSearchTerm("");
       } catch (error) {
         console.log(error);
       } finally {
@@ -135,11 +143,27 @@ const TrackRequest = () => {
       const allOrdersRes = await axios.post("/api/get-orders", data);
       const { data: allOrdersResData } = await allOrdersRes.data;
       setOrders(filter(allOrdersResData, Boolean));
+      setFilteredOrders(filter(allOrdersResData, Boolean));
+      setSearchTerm("");
     } catch (error) {
       console.log(error);
     } finally {
       setFetching(false);
     }
+  };
+
+  const searchItems = () => {
+    const KEYS_TO_FILTERS = [
+      "order_no",
+      "delivery_charge",
+      "order_date",
+      "total_amount",
+      "order_status_desc",
+    ];
+    const filtered = orders.filter(createFilter(searchTerm, KEYS_TO_FILTERS));
+
+    // console.log({ filtered });
+    setFilteredOrders(filtered);
   };
 
   if (showDetails && orderToShow) {
@@ -153,13 +177,13 @@ const TrackRequest = () => {
   }
 
   return (
-    <div className="relative min-h-screen w-full">
+    <div className="relative w-full min-h-screen">
       <div className="absolute top-[100px] w-full pb-4">
         <div className="w-full px-3">
-          <div className="flex w-full sm:w-auto justify-center items-center">
+          <div className="flex items-center justify-center w-full ">
             <div className="flex w-full sm:w-auto">
               <input
-                className="form-input"
+                className="w-1/2 form-input"
                 {...register("startDate", {
                   required: `Start date required`,
                   valueAsDate: true,
@@ -169,12 +193,12 @@ const TrackRequest = () => {
                 defaultValue={format(startOfQuarter(new Date()), "yyyy-MM-dd")}
                 // defaultValue={format(startOfMonth(new Date()), "yyyy-MM-dd")}
               />
-              <p className="text-red-500 text-xs">
+              <p className="text-xs text-red-500">
                 {errors?.startDate?.message}
               </p>
 
               <input
-                className="form-input"
+                className="w-1/2 form-input"
                 {...register("endDate", {
                   required: `End date required`,
                   valueAsDate: true,
@@ -183,7 +207,7 @@ const TrackRequest = () => {
                 defaultValue={format(new Date(), "yyyy-MM-dd")}
                 // min={format(new Date(), "yyyy-MM-dd")}
               />
-              <p className="text-red-500 text-xs">{errors?.endDate?.message}</p>
+              <p className="text-xs text-red-500">{errors?.endDate?.message}</p>
             </div>
           </div>
 
@@ -202,9 +226,28 @@ const TrackRequest = () => {
           </div>
         </div>
 
+        <div className="flex w-full px-3 my-2">
+          <input
+            className="w-2/3 py-1 form-input"
+            type="text"
+            value={searchTerm}
+            onChange={(e) => {
+              e.persist();
+              setSearchTerm(e.target.value);
+            }}
+          />
+
+          <button
+            className={`bg-blue-600 ml-2 rounded text-white outline-none w-auto w-1/3`}
+            onClick={searchItems}
+          >
+            Search
+          </button>
+        </div>
+
         <div className="mt-4">
           <TableExample
-            orders={orders}
+            orders={filteredOrders}
             setShowDetails={setShowDetails}
             setOrderToShow={setOrderToShow}
           />

@@ -214,7 +214,6 @@ const CreateDelivery = () => {
               "customerDetails" in values
                 ? values?.customerDetails?.customer_email || ""
                 : "",
-            // delivery_charge: 1,
             delivery_charge: values?.deliveryFee?.price,
             delivery_items: items,
             delivery_notes: val?.notes ?? "",
@@ -225,7 +224,7 @@ const CreateDelivery = () => {
       const data = {
         delivery_type: "DELIVERY",
         delivery_outlet: outletSelected?.outlet_id,
-        // deliveries: deliveries,
+        // deliveries,
         deliveries: JSON.stringify(deliveries),
         total_amount: values?.deliveryFee?.price,
         source: "INSHP",
@@ -347,7 +346,7 @@ const CreateDelivery = () => {
 
   if (appLoading) {
     return (
-      <div className="flex flex-wrap justify-center items-center">
+      <div className="flex flex-wrap items-center justify-center">
         <Spinner width={50} height={50} color="rgba(5, 150, 105)" />
       </div>
     );
@@ -356,11 +355,11 @@ const CreateDelivery = () => {
   // console.log(window.gw.Pay);
 
   return (
-    <div className="relative min-h-screen w-full">
+    <div className="relative w-full min-h-screen">
       <div className="absolute top-[100px] w-full pb-4">
         {step === 0 && (
           <div>
-            <p className="text-sm px-10 text-center mb-4 font-bold">
+            <p className="px-10 mb-4 text-sm font-bold text-center">
               Complete the form with the details to initiate the delivery
               request
             </p>
@@ -413,7 +412,7 @@ const CreateDelivery = () => {
                           <div className="flex w-full">
                             {fields.length > 1 && (
                               <button
-                                className="text-red-500 font-bold text-sm mr-2"
+                                className="mr-2 text-sm font-bold text-red-500"
                                 onClick={() => {
                                   remove(index);
                                 }}
@@ -422,7 +421,7 @@ const CreateDelivery = () => {
                               </button>
                             )}
                             <button
-                              className="text-green-500 font-bold text-sm"
+                              className="text-sm font-bold text-green-500"
                               onClick={() => {
                                 append({});
                               }}
