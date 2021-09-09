@@ -53,6 +53,10 @@ const CreateADelivery = ({
   let deliveries = watch(`deliveries`);
   let deliveryData = watch(`deliveryFee`);
   let customerDetails = watch(`customerDetails`);
+  let deliveryRouteCosts = watch(`deliveryRouteCosts`, []);
+  let deliveryEstimate = watch(`deliveryEstimate`, null);
+
+  // console.log(deliveryEstimate);
 
   function openModal() {
     setIsOpen(true);
@@ -68,7 +72,8 @@ const CreateADelivery = ({
     const getCoordinates = async () => {
       setFetching(true);
       setValue(`deliveryFee`, null);
-
+      setValue(`deliveryRouteCosts`, []);
+      setValue(`deliveryEstimate`, null);
       // console.log(deliveryInputValue);
 
       const response = await axios.post("/api/coordinates", {
@@ -112,12 +117,15 @@ const CreateADelivery = ({
             if (Number(resData?.status) === 0) {
               let { data } = await resData;
 
-              const price = get(data, "price", 0);
-              data = { ...data, price: Number(parseFloat(price)) };
+              // const price = get(data, "price", 0);
+              // data = { ...data, price: Number(parseFloat(price)) };
 
               // console.log(data);
 
-              setValue(`deliveryFee`, data);
+              setValue(`deliveryRouteCosts`, data);
+
+              // setValue(`deliveryFee`, data);
+              // setValue(`deliveryRouteCosts`, data);
             } else {
               toast.error(
                 `We do not deliver to this area. Please select a different area`
@@ -463,7 +471,7 @@ const CreateADelivery = ({
                         }),
                         placeholder: (base) => ({
                           ...base,
-                          ...tailwind("text-gray-500"),
+                          ...tailwind("text-gray-900"),
                         }),
                       },
                       placeholder: "Search for the delivery location",
@@ -485,18 +493,56 @@ const CreateADelivery = ({
               </div>
             )}
           </div>
-          {deliveryData && (
-            <div className="w-full mt-4">
-              <p>
-                <span className="font-bold">Delivery Fee: </span>
-                <span>{`GHS${deliveryData?.price}`}</span>
-              </p>
-            </div>
-          )}
           {errors[`deliveries`] && errors[`deliveries`][index] && (
             <p className="text-xs text-red-500">
               {errors[`deliveries`][index]?.deliveryFee?.message}
             </p>
+          )}
+          <div className="mt-4">
+            <Label
+              text={`Select Delivery Option
+              ${
+                deliveryRouteCosts?.distance
+                  ? `(${deliveryRouteCosts?.distance} from outlet)`
+                  : ``
+              }`}
+            />
+            <select
+              {...register("deliveryEstimate", {
+                required: `Please enter a delivery location and select a delivery rate`,
+              })}
+              defaultValue=""
+              className="block w-full px-3 py-3 text-gray-900 bg-white border border-gray-500 rounded focus:outline-none focus:border-black"
+            >
+              <option value="" disabled="disabled">{`Select Option`}</option>
+              {(deliveryRouteCosts?.pricingestimate || [])?.map(
+                (estimate, index) => {
+                  return (
+                    <option
+                      key={estimate.estimateName + index}
+                      value={JSON.stringify(estimate)}
+                    >
+                      {estimate.estimateName} @ {estimate.currency}
+                      {estimate.price}
+                    </option>
+                  );
+                }
+              )}
+            </select>
+            {errors?.deliveryEstimate && (
+              <p className="text-xs text-red-500">
+                {errors?.deliveryEstimate?.message}
+              </p>
+            )}
+          </div>
+
+          {deliveryEstimate && (
+            <div className="w-full mt-4">
+              <p>
+                <span className="font-bold">Delivery Fee: </span>
+                <span>{`GHS${JSON.parse(deliveryEstimate)?.price}`}</span>
+              </p>
+            </div>
           )}
         </div>
       </div>

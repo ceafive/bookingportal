@@ -31,23 +31,21 @@ const CollectMomo = ({
     state: { activePayments },
   } = useApp();
 
-  const [fetchingDeliveryCharge, setfetchingDeliveryChargeDeliveryCharge] =
+  const [fetchingDeliveryCharge, setFetchingDeliveryCharge] =
     React.useState(true);
   const [deliveryCharge, setDeliveryCharge] = React.useState(0);
   const paymentOption = watch("paymentOption");
 
   React.useEffect(() => {
     if (paymentOption) {
-      const {
-        deliveryFee: { price },
-      } = getValues();
+      let { deliveryEstimate } = getValues();
+      deliveryEstimate = JSON.parse(deliveryEstimate);
 
-      // console.log({ price });
       const { user_merchant_id } = user;
 
       const data = {
         channel: paymentOption,
-        amount: price,
+        amount: deliveryEstimate?.price,
         merchant: user_merchant_id,
       };
 
@@ -58,7 +56,7 @@ const CollectMomo = ({
         // console.log(resData);
         setDeliveryCharge(resData);
         setValue("totalAmount", resData);
-        setfetchingDeliveryChargeDeliveryCharge(false);
+        setFetchingDeliveryCharge(false);
       })();
     }
   }, [getValues, paymentOption, setValue, user]);
@@ -80,11 +78,11 @@ const CollectMomo = ({
         merchant: user?.user_merchant_id,
       };
 
-      // console.log(data);
+      console.log(data);
 
       const res = await axios.post("/api/process-payment", data);
       const resData = res?.data ?? {};
-      // console.log(resData);
+      console.log(resData);
 
       if (Number(resData?.status) !== 0) {
         toast.error(resData?.message);

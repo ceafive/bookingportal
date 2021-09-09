@@ -6,7 +6,7 @@ const Select = React.forwardRef(
     return (
       <div className={`relative ${getClassesString(parentClasses)}`}>
         <select
-          className={`block appearance-none w-full border border-gray-500 text-black py-2 rounded focus:outline-none bg-white ${getClassesString(
+          className={`block appearance-none w-full border border-gray-500 text-gray-900 py-3 rounded focus:outline-none bg-white ${getClassesString(
             selectClasses
           )}`}
           {...props}

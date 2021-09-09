@@ -57,7 +57,7 @@ const CreateDelivery = () => {
   const [confirmButtonText, setConfirmButtonText] = React.useState("");
   const [processError, setProcessError] = React.useState("");
 
-  const statusCheckTotalRunTime = 60000;
+  const statusCheckTotalRunTime = 20000;
 
   React.useEffect(() => {
     (async () => {
@@ -214,7 +214,14 @@ const CreateDelivery = () => {
               "customerDetails" in values
                 ? values?.customerDetails?.customer_email || ""
                 : "",
-            delivery_charge: values?.deliveryFee?.price,
+            delivery_charge: Number(
+              JSON.parse(values?.deliveryEstimate)?.price
+            ),
+            delivery_charge_type: JSON.parse(values?.deliveryEstimate)
+              ?.pricingtype,
+            delivery_charge_ref: JSON.parse(values?.deliveryEstimate)
+              ?.estimateId,
+            // delivery_charge: values?.deliveryFee?.price,
             delivery_items: items,
             delivery_notes: val?.notes ?? "",
           },
@@ -226,13 +233,14 @@ const CreateDelivery = () => {
         delivery_outlet: outletSelected?.outlet_id,
         // deliveries,
         deliveries: JSON.stringify(deliveries),
-        total_amount: values?.deliveryFee?.price,
+        total_amount: Number(JSON.parse(values?.deliveryEstimate)?.price),
+        // total_amount: values?.deliveryFee?.price,
         source: "INSHP",
         merchant: user?.user_merchant_id,
         mod_by: user?.login,
       };
 
-      // console.log(data);
+      console.log(data);
       // return;
       const { data: resData } = await axios.post("/api/raise-order", data);
 
@@ -272,7 +280,7 @@ const CreateDelivery = () => {
   // };
 
   React.useEffect(() => {
-    const verifyTransaction = async (firstTimeStarted) => {
+    const verifyTransaction = async (firstTimeStarted, interval) => {
       try {
         setFetching(true);
         const getResData = async () => {
@@ -292,32 +300,37 @@ const CreateDelivery = () => {
         // console.log(message);
 
         if (message === "new" || message === "awaiting_payment") {
-          // console.log(
-          //   Date.now() - firstTimeStarted > statusCheckTotalRunTime - 10000
-          // );
           if (Date.now() - firstTimeStarted > statusCheckTotalRunTime - 10000) {
             setConfirmButtonText("Start New Delivery");
             setProcessError(
               "Sorry, Payment for your Delivery request is pending confirmation. <br>You will be notified via Email/SMS once your payment is confirmed.<br>And your request will be processed."
             );
             setFetching(false);
+            setLoading(false);
             setTicking(false);
+            clearInterval(interval);
           }
         } else if (message === "paid") {
           setConfirmButtonText("Start New Delivery");
           setProcessError(`Delivery Request Payment Successful`);
           setFetching(false);
+          setLoading(false);
           setTicking(false);
+          clearInterval(interval);
         } else if (message === "failed") {
           setConfirmButtonText("Start New Delivery");
           setProcessError(`Delivery Request Payment Failed`);
           setFetching(false);
+          setLoading(false);
           setTicking(false);
+          clearInterval(interval);
         } else {
           setConfirmButtonText("Start New Delivery");
           setProcessError(`${upperCase(message)} TRANSACTION`);
           setFetching(false);
+          setLoading(false);
           setTicking(false);
+          clearInterval(interval);
         }
       } catch (error) {
         console.log(error);
@@ -325,13 +338,10 @@ const CreateDelivery = () => {
     };
 
     if (ticking) {
-      verifyTransaction(Date.now());
+      setLoading(true);
       var started = Date.now();
-
       var interval = setInterval(() => {
-        if (Date.now() - started > statusCheckTotalRunTime)
-          clearInterval(interval);
-        else verifyTransaction(started);
+        verifyTransaction(started, interval);
       }, 10000);
     }
   }, [statusText?.invoice, ticking]);

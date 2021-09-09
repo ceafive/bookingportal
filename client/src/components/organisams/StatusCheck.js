@@ -5,18 +5,14 @@ import ButtonSpinner from "../molecules/ButtonSpinner";
 
 const StatusCheck = ({
   statusText,
-  fetching,
-  setFetching,
   setTicking,
   setLoading,
   loading,
-  ticking,
   setConfirmButtonText,
   confirmButtonText,
   processError,
   reset,
   setStep,
-  append,
   setProcessError,
 }) => {
   const {
@@ -63,7 +59,7 @@ const StatusCheck = ({
           />
         )}
         <ButtonSpinner
-          processing={fetching}
+          processing={loading}
           onClick={() => {
             confirmButtonText
               ? (() => {
