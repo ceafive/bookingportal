@@ -89,7 +89,14 @@ const CollectMomo = ({
       console.log(resData);
 
       if (Number(resData?.status) !== 0) {
-        toast.error(resData?.message);
+        if (
+          values?.paymentOption === "CASH" ||
+          values?.paymentOption === "ACTDBT"
+        ) {
+          setConfirmButtonText("Start New Delivery");
+          setProcessError(resData?.message);
+          setStep(2);
+        } else toast.error(resData?.message);
       } else {
         setStatusText({
           ...statusText,

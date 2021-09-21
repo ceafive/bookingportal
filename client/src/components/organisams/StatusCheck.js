@@ -31,6 +31,7 @@ const StatusCheck = ({
           <span className="font-bold">{statusText?.invoice}</span>
         </p>
       </div>
+
       {processError ? (
         <p
           dangerouslySetInnerHTML={{ __html: processError }}
