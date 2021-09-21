@@ -35,7 +35,8 @@ const StatusCheck = ({
         <p
           dangerouslySetInnerHTML={{ __html: processError }}
           className={`text-center text-sm ${
-            processError?.includes("Delivery Request Payment Successful")
+            processError?.includes("Successful") ||
+            processError?.includes("successfully")
               ? `text-green-500`
               : `text-red-500`
           } `}
@@ -48,7 +49,8 @@ const StatusCheck = ({
       )}
 
       <div className="mt-4">
-        {(processError?.includes("Delivery Request Payment Successful") ||
+        {(processError?.includes("Successful") ||
+          processError?.includes("successfully") ||
           processError?.includes("Sorry")) && (
           <Button
             onClick={() => {

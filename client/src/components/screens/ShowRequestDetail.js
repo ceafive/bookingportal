@@ -21,7 +21,7 @@ const ShowRequestDetail = ({ order, setShowDetails, setOrderToShow }) => {
           <Tr>
             <Th>Order No.</Th>
             <Th>Order Date</Th>
-            <Th>Order Amount</Th>
+            {/* <Th>Order Amount</Th> */}
             <Th>Discount</Th>
             <Th>Order Items</Th>
             <Th>Order Status</Th>
@@ -50,7 +50,7 @@ const ShowRequestDetail = ({ order, setShowDetails, setOrderToShow }) => {
                 "iii, d MMM yy h:mmaaa"
               )}
             </Td>
-            <Td>{order?.order_amount}</Td>
+            {/* <Td>{order?.order_amount}</Td> */}
             <Td>{order?.order_discount}</Td>
             <Td>{order?.order_items}</Td>
             <Td>{order?.order_status_desc}</Td>

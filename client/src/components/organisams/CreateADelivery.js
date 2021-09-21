@@ -498,43 +498,46 @@ const CreateADelivery = ({
               {errors[`deliveries`][index]?.deliveryFee?.message}
             </p>
           )}
-          <div className="mt-4">
-            <Label
-              text={`Select Delivery Option
+
+          {watch(`deliveryInputValue`) && (
+            <div className="mt-4">
+              <Label
+                text={`Select Delivery Option
               ${
                 deliveryRouteCosts?.distance
                   ? `(${deliveryRouteCosts?.distance} from outlet)`
                   : ``
               }`}
-            />
-            <select
-              {...register("deliveryEstimate", {
-                required: `Please enter a delivery location and select a delivery rate`,
-              })}
-              defaultValue=""
-              className="block w-full px-3 py-3 text-gray-900 bg-white border border-gray-500 rounded focus:outline-none focus:border-black"
-            >
-              <option value="" disabled="disabled">{`Select Option`}</option>
-              {(deliveryRouteCosts?.pricingestimate || [])?.map(
-                (estimate, index) => {
-                  return (
-                    <option
-                      key={estimate.estimateName + index}
-                      value={JSON.stringify(estimate)}
-                    >
-                      {estimate.estimateName} @ {estimate.currency}
-                      {estimate.price}
-                    </option>
-                  );
-                }
+              />
+              <select
+                {...register("deliveryEstimate", {
+                  required: `Please select a delivery rate`,
+                })}
+                defaultValue=""
+                className="block w-full px-3 py-3 text-gray-900 bg-white border border-gray-500 rounded focus:outline-none focus:border-black"
+              >
+                <option value="" disabled="disabled">{`Select Option`}</option>
+                {(deliveryRouteCosts?.pricingestimate || [])?.map(
+                  (estimate, index) => {
+                    return (
+                      <option
+                        key={estimate.estimateName + index}
+                        value={JSON.stringify(estimate)}
+                      >
+                        {estimate.estimateName} @ {estimate.currency}
+                        {estimate.price}
+                      </option>
+                    );
+                  }
+                )}
+              </select>
+              {errors?.deliveryEstimate && (
+                <p className="text-xs text-red-500">
+                  {errors?.deliveryEstimate?.message}
+                </p>
               )}
-            </select>
-            {errors?.deliveryEstimate && (
-              <p className="text-xs text-red-500">
-                {errors?.deliveryEstimate?.message}
-              </p>
-            )}
-          </div>
+            </div>
+          )}
 
           {deliveryEstimate && (
             <div className="w-full mt-4">

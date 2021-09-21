@@ -10,7 +10,7 @@ import { useFieldArray, useForm } from "react-hook-form";
 import CollectMomo from "../organisams/CollectMomo";
 import toast from "react-hot-toast";
 import StatusCheck from "../organisams/StatusCheck";
-import { upperCase } from "lodash";
+import { intersectionWith, isEqual, upperCase } from "lodash";
 import Spinner from "../atoms/Spinner";
 
 const CreateDelivery = () => {
@@ -69,30 +69,32 @@ const CreateDelivery = () => {
       const dataoutlets = resoutlets?.data?.data ?? [];
       const dataactivepayments = resactivepayments?.data?.data ?? [];
 
+      const paymentOptions = {
+        VISAG: "VISA AND MASTERCARD",
+        MTNMM: "MTN MOBILE MONEY",
+        TIGOC: "AIRTELTIGO MONEY",
+        VODAC: "VODAFONE CASH",
+        CASH: "CASH ON DELIVERY",
+        ACTDBT: "CHARGE TO ACCOUNT",
+      };
+
       const transformed = dataactivepayments
         .filter((dataactivepayment) => {
-          if (
-            dataactivepayment === "MTNMM" ||
-            dataactivepayment === "VODAC" ||
-            // dataactivepayment === "VISAG" || // TODO: check and implement functionality and decomment
-            dataactivepayment === "TIGOC"
-          )
-            return true;
-          else return false;
+          if (dataactivepayment === "INVPAY" || dataactivepayment === "VISAG")
+            return false;
+          else return true;
+        })
+        .filter((item) => {
+          return (user?.user_permissions || []).includes(item);
         })
         .map((dataactivepayment) => {
-          const paymentOptions = {
-            VISAG: "VISA AND MASTERCARD",
-            MTNMM: "MTN MOBILE MONEY",
-            TIGOC: "AIRTELTIGO MONEY",
-            VODAC: "VODAFONE CASH",
-          };
-
           return {
             name: dataactivepayment,
             label: paymentOptions[dataactivepayment],
           };
         });
+
+      // console.log({ transformed });
 
       setOutlets(dataoutlets);
       setActivePayments(transformed);
@@ -240,7 +242,7 @@ const CreateDelivery = () => {
         mod_by: user?.login,
       };
 
-      console.log(data);
+      // console.log(data);
       // return;
       const { data: resData } = await axios.post("/api/raise-order", data);
 
@@ -476,6 +478,8 @@ const CreateDelivery = () => {
             statusText={statusText}
             setFetching={setFetching}
             setStatusText={setStatusText}
+            setConfirmButtonText={setConfirmButtonText}
+            setProcessError={setProcessError}
           />
         )}
 

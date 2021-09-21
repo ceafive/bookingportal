@@ -84,8 +84,8 @@ async function putHandler(req, res, url, data, additionalHeaders = {}) {
     const iPayResponse = await axiosIPAY({
       url,
       method: "put",
-      data,
-      headers: { ...getHeaders(), ...additionalHeaders },
+      data: qs.stringify(data),
+      headers: additionalHeaders,
     });
 
     // console.log(iPayResponse);

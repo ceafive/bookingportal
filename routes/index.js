@@ -1,6 +1,6 @@
 const { default: axios } = require("axios");
 var express = require("express");
-const { postHandler, getHandler } = require("../utils");
+const { postHandler, getHandler, putHandler } = require("../utils");
 var router = express.Router();
 
 /* LOGIN user */
@@ -68,6 +68,17 @@ router.post("/transaction-fees", async function (req, res, next) {
     res,
     `vendors/service/charge/${channel}/${amount}/${merchant}`
   );
+});
+
+/* GET check user */
+router.post("/check-user", async function (req, res, next) {
+  const { username } = req.body;
+  return await getHandler(req, res, `login/pin/user/${username}`);
+});
+
+/* GET check user */
+router.post("/setup-user-pin", async function (req, res, next) {
+  return await putHandler(req, res, `/users/merchant/user/pin`, req.body);
 });
 
 /* GET customer details */

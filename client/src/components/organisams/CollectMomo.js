@@ -22,6 +22,8 @@ const CollectMomo = ({
   statusText,
   setFetching,
   setStatusText,
+  setConfirmButtonText,
+  setProcessError,
 }) => {
   const {
     state: { user },
@@ -61,8 +63,6 @@ const CollectMomo = ({
     }
   }, [getValues, paymentOption, setValue, user]);
 
-  // console.log({ paymentOption });
-
   const onProcessPayment = async (values) => {
     try {
       setFetching(true);
@@ -71,14 +71,18 @@ const CollectMomo = ({
         // total_amount: 0.1,
         total_amount: values?.totalAmount?.total,
         service_charge: values?.totalAmount?.charge,
-        payment_type: values?.paymentOption === "VISAG" ? "CARD" : "MOMO",
-        payment_number: values?.momoNumberOrEmailAddress,
+        // payment_type: values?.paymentOption === "VISAG" ? "CARD" : "MOMO",
+        payment_number:
+          values?.paymentOption === "CASH" || values?.paymentOption === "ACTDBT"
+            ? user?.user_merchant_phone
+            : values?.momoNumberOrEmailAddress,
         payment_network: values?.paymentOption,
         mod_by: user?.login,
         merchant: user?.user_merchant_id,
       };
 
-      console.log(data);
+      // console.log(data);
+      // return;
 
       const res = await axios.post("/api/process-payment", data);
       const resData = res?.data ?? {};
@@ -92,6 +96,14 @@ const CollectMomo = ({
           invoice: resData?.invoice,
           message: resData?.message,
         });
+
+        if (
+          values?.paymentOption === "CASH" ||
+          values?.paymentOption === "ACTDBT"
+        ) {
+          setConfirmButtonText("Start New Delivery");
+          setProcessError(resData?.message);
+        }
         setStep(2);
       }
     } catch (error) {
@@ -243,235 +255,241 @@ const CollectMomo = ({
               )}
             </div>
 
-            {paymentOption === "VISAG" ? (
+            {paymentOption && (
               <>
-                {cardProps.map((cardProp) => {
-                  return (
-                    <div key={cardProp?.name} className="w-full mt-4">
-                      <Label text={cardProp?.labelText} />
-                      {cardProp?.type === "select" ? (
-                        <Select
-                          id={cardProp?.id}
-                          selectClasses="px-2"
-                          {...register(cardProp?.name, {
-                            required: `Select ${capitalize(
-                              upperCase(cardProp?.name)
-                            )}`,
-                          })}
-                          data={cardProp?.optionsData.map((optionData) => {
-                            return {
-                              name: optionData?.name,
-                              value: optionData?.value,
-                            };
-                          })}
-                        />
-                      ) : (
-                        <Input
-                          id={cardProp?.id}
-                          inputClasses="!border !border-gray-500 !shadow-none hover:focus:!ring-0"
-                          placeholder={`Enter ${capitalize(
-                            upperCase(cardProp?.name)
-                          )}`}
-                          {...register(cardProp?.name, {
-                            required: `Enter ${capitalize(
-                              upperCase(cardProp?.name)
-                            )}`,
-                          })}
-                        />
-                      )}
-                      {errors[cardProp?.name] && (
-                        <p className="text-xs text-red-500">
-                          {errors[cardProp?.name]?.message}
-                        </p>
-                      )}
+                {paymentOption === "VISAG" ? (
+                  <>
+                    {cardProps.map((cardProp) => {
+                      return (
+                        <div key={cardProp?.name} className="w-full mt-4">
+                          <Label text={cardProp?.labelText} />
+                          {cardProp?.type === "select" ? (
+                            <Select
+                              id={cardProp?.id}
+                              selectClasses="px-2"
+                              {...register(cardProp?.name, {
+                                required: `Select ${capitalize(
+                                  upperCase(cardProp?.name)
+                                )}`,
+                              })}
+                              data={cardProp?.optionsData.map((optionData) => {
+                                return {
+                                  name: optionData?.name,
+                                  value: optionData?.value,
+                                };
+                              })}
+                            />
+                          ) : (
+                            <Input
+                              id={cardProp?.id}
+                              inputClasses="!border !border-gray-500 !shadow-none hover:focus:!ring-0"
+                              placeholder={`Enter ${capitalize(
+                                upperCase(cardProp?.name)
+                              )}`}
+                              {...register(cardProp?.name, {
+                                required: `Enter ${capitalize(
+                                  upperCase(cardProp?.name)
+                                )}`,
+                              })}
+                            />
+                          )}
+                          {errors[cardProp?.name] && (
+                            <p className="text-xs text-red-500">
+                              {errors[cardProp?.name]?.message}
+                            </p>
+                          )}
+                        </div>
+                      );
+                    })}
+                    <div className="w-full mt-4">
+                      <Label text={`Expiry Date`} />
+                      <div className="flex justify-between items-center w-full">
+                        <div className="w-1/2">
+                          <Select
+                            id="gw_card_expire_month"
+                            selectClasses="px-2"
+                            {...register(`expiryMonth`, {
+                              required: `Select Expiry Month`,
+                            })}
+                            data={[
+                              {
+                                name: "MM",
+                                value: "",
+                              },
+                              {
+                                name: "01",
+                                value: "01",
+                              },
+                              {
+                                name: "02",
+                                value: "02",
+                              },
+                              {
+                                name: "03",
+                                value: "03",
+                              },
+                              {
+                                name: "04",
+                                value: "04",
+                              },
+                              {
+                                name: "05",
+                                value: "05",
+                              },
+                              {
+                                name: "06",
+                                value: "06",
+                              },
+                              {
+                                name: "07",
+                                value: "07",
+                              },
+                              {
+                                name: "08",
+                                value: "08",
+                              },
+                              {
+                                name: "09",
+                                value: "09",
+                              },
+                              {
+                                name: "10",
+                                value: "10",
+                              },
+                              {
+                                name: "11",
+                                value: "11",
+                              },
+                              {
+                                name: "12",
+                                value: "12",
+                              },
+                            ].map((optionData) => {
+                              return {
+                                name: optionData?.name,
+                                value: optionData?.value,
+                              };
+                            })}
+                          />
+                          {errors[`expiryMonth`] && (
+                            <p className="text-xs text-red-500">
+                              {errors[`expiryMonth`]?.message}
+                            </p>
+                          )}
+                        </div>
+                        <div className="w-1/2">
+                          <Select
+                            id="gw_card_expire_year"
+                            selectClasses="px-2"
+                            {...register(`expiryYear`, {
+                              required: `Select Expiry Year`,
+                            })}
+                            data={[
+                              {
+                                name: "YYYY",
+                                value: "",
+                              },
+                              {
+                                name: "2021",
+                                value: "2021",
+                              },
+                              {
+                                name: "2022",
+                                value: "2022",
+                              },
+                              {
+                                name: "2023",
+                                value: "2023",
+                              },
+                              {
+                                name: "2024",
+                                value: "2024",
+                              },
+                              {
+                                name: "2025",
+                                value: "2025",
+                              },
+                              {
+                                name: "2026",
+                                value: "2026",
+                              },
+                              {
+                                name: "2027",
+                                value: "2027",
+                              },
+                              {
+                                name: "2028",
+                                value: "2028",
+                              },
+                              {
+                                name: "2029",
+                                value: "2029",
+                              },
+                              {
+                                name: "2030",
+                                value: "2030",
+                              },
+                              {
+                                name: "2031",
+                                value: "2031",
+                              },
+                              {
+                                name: "2032",
+                                value: "2032",
+                              },
+                            ].map((optionData) => {
+                              return {
+                                name: optionData?.name,
+                                value: optionData?.value,
+                              };
+                            })}
+                          />
+                          {errors[`expiryYear`] && (
+                            <p className="text-xs text-red-500">
+                              {errors[`expiryYear`]?.message}
+                            </p>
+                          )}
+                        </div>
+                      </div>
                     </div>
-                  );
-                })}
-                <div className="w-full mt-4">
-                  <Label text={`Expiry Date`} />
-                  <div className="flex justify-between items-center w-full">
-                    <div className="w-1/2">
-                      <Select
-                        id="gw_card_expire_month"
-                        selectClasses="px-2"
-                        {...register(`expiryMonth`, {
-                          required: `Select Expiry Month`,
-                        })}
-                        data={[
-                          {
-                            name: "MM",
-                            value: "",
-                          },
-                          {
-                            name: "01",
-                            value: "01",
-                          },
-                          {
-                            name: "02",
-                            value: "02",
-                          },
-                          {
-                            name: "03",
-                            value: "03",
-                          },
-                          {
-                            name: "04",
-                            value: "04",
-                          },
-                          {
-                            name: "05",
-                            value: "05",
-                          },
-                          {
-                            name: "06",
-                            value: "06",
-                          },
-                          {
-                            name: "07",
-                            value: "07",
-                          },
-                          {
-                            name: "08",
-                            value: "08",
-                          },
-                          {
-                            name: "09",
-                            value: "09",
-                          },
-                          {
-                            name: "10",
-                            value: "10",
-                          },
-                          {
-                            name: "11",
-                            value: "11",
-                          },
-                          {
-                            name: "12",
-                            value: "12",
-                          },
-                        ].map((optionData) => {
-                          return {
-                            name: optionData?.name,
-                            value: optionData?.value,
-                          };
-                        })}
-                      />
-                      {errors[`expiryMonth`] && (
-                        <p className="text-xs text-red-500">
-                          {errors[`expiryMonth`]?.message}
-                        </p>
-                      )}
-                    </div>
-                    <div className="w-1/2">
-                      <Select
-                        id="gw_card_expire_year"
-                        selectClasses="px-2"
-                        {...register(`expiryYear`, {
-                          required: `Select Expiry Year`,
-                        })}
-                        data={[
-                          {
-                            name: "YYYY",
-                            value: "",
-                          },
-                          {
-                            name: "2021",
-                            value: "2021",
-                          },
-                          {
-                            name: "2022",
-                            value: "2022",
-                          },
-                          {
-                            name: "2023",
-                            value: "2023",
-                          },
-                          {
-                            name: "2024",
-                            value: "2024",
-                          },
-                          {
-                            name: "2025",
-                            value: "2025",
-                          },
-                          {
-                            name: "2026",
-                            value: "2026",
-                          },
-                          {
-                            name: "2027",
-                            value: "2027",
-                          },
-                          {
-                            name: "2028",
-                            value: "2028",
-                          },
-                          {
-                            name: "2029",
-                            value: "2029",
-                          },
-                          {
-                            name: "2030",
-                            value: "2030",
-                          },
-                          {
-                            name: "2031",
-                            value: "2031",
-                          },
-                          {
-                            name: "2032",
-                            value: "2032",
-                          },
-                        ].map((optionData) => {
-                          return {
-                            name: optionData?.name,
-                            value: optionData?.value,
-                          };
-                        })}
-                      />
-                      {errors[`expiryYear`] && (
-                        <p className="text-xs text-red-500">
-                          {errors[`expiryYear`]?.message}
-                        </p>
-                      )}
-                    </div>
+                  </>
+                ) : paymentOption === "CASH" || paymentOption === "ACTDBT" ? (
+                  <div className=""></div>
+                ) : (
+                  <div className="w-full mt-4">
+                    <Label
+                      text={
+                        paymentOption === "VISAG"
+                          ? "Phone number or Email address"
+                          : "Mobile Money number"
+                      }
+                    />
+                    <Input
+                      inputClasses="!border !border-gray-500 !shadow-none hover:focus:!ring-0"
+                      type={paymentOption === "VISAG" ? "text" : "number"}
+                      // pattern={"[0-9]*"}
+                      noValidate
+                      placeholder={
+                        paymentOption === "VISAG"
+                          ? "Enter phone number or email address"
+                          : "Enter mobile money number"
+                      }
+                      {...register(`momoNumberOrEmailAddress`, {
+                        required: `${
+                          paymentOption === "VISAG"
+                            ? "Enter phone number or email address"
+                            : "Enter mobile money number"
+                        }`,
+                      })}
+                    />
+                    {errors[`momoNumberOrEmailAddress`] && (
+                      <p className="text-xs text-red-500">
+                        {errors[`momoNumberOrEmailAddress`]?.message}
+                      </p>
+                    )}
                   </div>
-                </div>
-              </>
-            ) : (
-              <div className="w-full mt-4">
-                <Label
-                  text={
-                    paymentOption === "VISAG"
-                      ? "Phone number or Email address"
-                      : "Mobile Money number"
-                  }
-                />
-                <Input
-                  inputClasses="!border !border-gray-500 !shadow-none hover:focus:!ring-0"
-                  type={paymentOption === "VISAG" ? "text" : "number"}
-                  // pattern={"[0-9]*"}
-                  noValidate
-                  placeholder={
-                    paymentOption === "VISAG"
-                      ? "Enter phone number or email address"
-                      : "Enter mobile money number"
-                  }
-                  {...register(`momoNumberOrEmailAddress`, {
-                    required: `${
-                      paymentOption === "VISAG"
-                        ? "Enter phone number or email address"
-                        : "Enter mobile money number"
-                    }`,
-                  })}
-                />
-                {errors[`momoNumberOrEmailAddress`] && (
-                  <p className="text-xs text-red-500">
-                    {errors[`momoNumberOrEmailAddress`]?.message}
-                  </p>
                 )}
-              </div>
+              </>
             )}
           </div>
 
@@ -485,6 +503,10 @@ const CollectMomo = ({
                 .
                 {paymentOption === "VISAG"
                   ? ` You will receive an Email/SMS with a link to complete payment with your VISA or MASTERCARD.`
+                  : paymentOption === "CASH"
+                  ? ` Cash Payment of GHS${deliveryCharge?.total} will be taken from customer upon delivery.`
+                  : paymentOption === "ACTDBT"
+                  ? ` Delivery payment of GHS${deliveryCharge?.total} will be charged to your Digistore Account Wallet`
                   : ` You will receive a prompt on the mobile money number provided.
                     Enter your PIN to complete payments.`}
               </p>
