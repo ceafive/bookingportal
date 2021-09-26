@@ -57,7 +57,7 @@ const StatusCheck = ({
             onClick={() => {
               setComponentToRender("track");
             }}
-            btnText="Track Request"
+            btnText="Track Deliveries"
             btnClasses="mb-2 bg-blue-800 text-white"
           />
         )}

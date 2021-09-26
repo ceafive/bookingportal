@@ -75,7 +75,7 @@ const CreateDelivery = () => {
         TIGOC: "AIRTELTIGO MONEY",
         VODAC: "VODAFONE CASH",
         CASH: "CASH ON DELIVERY",
-        ACTDBT: "CHARGE TO ACCOUNT",
+        ACTDBT: "INVOICING",
       };
 
       const transformed = dataactivepayments
@@ -237,13 +237,13 @@ const CreateDelivery = () => {
         deliveries: JSON.stringify(deliveries),
         total_amount: Number(JSON.parse(values?.deliveryEstimate)?.price),
         // total_amount: values?.deliveryFee?.price,
-        source: "INSHP",
+        source: "DIGIDELVRY",
         merchant: user?.user_merchant_id,
         mod_by: user?.login,
       };
 
-      // console.log(data);
-      // return;
+      console.log(data);
+      return;
       const { data: resData } = await axios.post("/api/raise-order", data);
 
       // console.log(resData);
@@ -452,7 +452,7 @@ const CreateDelivery = () => {
               <div className="w-2/3">
                 <Button
                   disabled={fetching}
-                  btnText="Raise Order"
+                  btnText="Book Delivery"
                   btnClasses={`${
                     fetching
                       ? "!bg-gray-300 !text-gray-100"

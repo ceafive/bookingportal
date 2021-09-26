@@ -41,7 +41,7 @@ export function TableExample({ orders, setShowDetails, setOrderToShow }) {
                       </button>
                     </div>
                     <div>
-                      <p>Invoice: {order?.order_no}</p>
+                      <p>Order No: {order?.order_no}</p>
                       <p>Date: {order?.order_date}</p>
                       <p>Delivery Amount: {order?.delivery_charge || ""}</p>
                     </div>

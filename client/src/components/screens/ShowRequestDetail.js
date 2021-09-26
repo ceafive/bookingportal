@@ -59,7 +59,7 @@ const ShowRequestDetail = ({ order, setShowDetails, setOrderToShow }) => {
             <Td>{order?.customer_notes || "N/A"}</Td>
             <Td>{order?.payment_invoice}</Td>
             <Td>{order?.delivery_type}</Td>
-            <Td>{order?.delivery_charge}</Td>
+            <Td>{order?.delivery_charge} GHs</Td>
             <Td>{order?.delivery_location}</Td>
             <Td>{order?.delivery_notes || "N/A"}</Td>
             <Td>
