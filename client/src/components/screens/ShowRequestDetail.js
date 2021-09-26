@@ -67,7 +67,7 @@ const ShowRequestDetail = ({ order, setShowDetails, setOrderToShow }) => {
                 ? order?.delivery_rider_name || "N/A"
                 : "N/A"}
             </Td>
-            <Td>{order?.total_amount}</Td>
+            <Td>{order?.total_amount} GHs</Td>
             <Td>{order?.customer_name || "N/A"}</Td>
             <Td>{order?.recipient_contact}</Td>
             <Td>{order?.created_by_name}</Td>
