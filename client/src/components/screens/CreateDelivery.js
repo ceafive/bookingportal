@@ -242,8 +242,8 @@ const CreateDelivery = () => {
         mod_by: user?.login,
       };
 
-      console.log(data);
-      return;
+      // console.log(data);
+      // return;
       const { data: resData } = await axios.post("/api/raise-order", data);
 
       // console.log(resData);
