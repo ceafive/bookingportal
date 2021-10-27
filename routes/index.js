@@ -14,7 +14,8 @@ router.post("/outlets", async function (req, res, next) {
   return await getHandler(
     req,
     res,
-    `stores/merchant/${merchant}/store/outlets/mobile/list`
+    `stores/merchant/${merchant}/store/outlets/all/list`
+    // `stores/merchant/${merchant}/store/outlets/mobile/list`
   );
 });
 

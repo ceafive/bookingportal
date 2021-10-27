@@ -29,6 +29,7 @@ const ShowRequestDetail = ({ order, setShowDetails, setOrderToShow }) => {
             <Th>Order Source</Th>
             <Th>Order Notes</Th>
             <Th>Order Invoice</Th>
+            <Th>Payment Channel</Th>
             <Th>Delivery Type</Th>
             <Th>Delivery Fee</Th>
             <Th>Delivery Location</Th>
@@ -58,6 +59,7 @@ const ShowRequestDetail = ({ order, setShowDetails, setOrderToShow }) => {
             <Td>{order?.order_source_desc}</Td>
             <Td>{order?.customer_notes || "N/A"}</Td>
             <Td>{order?.payment_invoice}</Td>
+            <Td>{order?.payment_channel || "N/A"}</Td>
             <Td>{order?.delivery_type}</Td>
             <Td>{order?.delivery_charge} GHs</Td>
             <Td>{order?.delivery_location}</Td>
