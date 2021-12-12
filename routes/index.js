@@ -37,8 +37,9 @@ router.post("/coordinates", async function (req, res, next) {
     //   `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=${deliveryInputValue.value.description}&inputtype=textquery&fields=geometry&key=AIzaSyCwlbBlciY3kB52y5_h0k4Zxmi8Ho4zK3M`
     // ); // TODO: old url, sometimes returns not results for some locations
 
+    const location = encodeURIComponent(deliveryInputValue.value.description);
     const iPayResponse = await axios.get(
-      `https://maps.googleapis.com/maps/api/geocode/json?address=${deliveryInputValue.value.description}&fields=geometry&region=GH&key=AIzaSyCwlbBlciY3kB52y5_h0k4Zxmi8Ho4zK3M`
+      `https://maps.googleapis.com/maps/api/geocode/json?address=${location}&fields=geometry&region=GH&key=AIzaSyCwlbBlciY3kB52y5_h0k4Zxmi8Ho4zK3M`
     );
 
     const iPayData = await iPayResponse.data;
