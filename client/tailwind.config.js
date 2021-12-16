@@ -10,7 +10,9 @@ module.exports = {
         sans: ["Nunito Sans, sans-serif"],
       },
       colors: {
+        brandBlue: "#21428F",
         brandGreen: "#eeefff",
+        brandGreen2: "#4AB647",
       },
     },
   },

@@ -4,7 +4,7 @@ const initialState = {
   appLoading: true,
   outlets: [],
   activePayments: [],
-  componentToRender: "raise",
+  componentToRender: "landing",
 };
 
 const AppContext = createContext();

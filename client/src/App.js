@@ -11,6 +11,8 @@ import Logo from "./components/atoms/Logo";
 import Header from "./components/molecules/Header";
 import Button from "./components/atoms/Button";
 import TrackRequest from "./components/screens/TrackRequest";
+import Landing from "./components/screens/Landing";
+import Schedule from "./components/screens/Schedule";
 
 function FallbackComponent() {
   return (
@@ -40,49 +42,21 @@ function App() {
     actions: { setComponentToRender },
   } = useApp();
 
-  // console.log({ componentToRender });
-
-  const newDate = new Date();
-  const startTime = "07:00:00";
-  const endTime = "20:00:00";
-  const currentTime = newDate.toLocaleTimeString("en-GB");
-
-  let deliveryIsOpen =
-    process.env.NODE_ENV === "production"
-      ? currentTime > startTime && currentTime < endTime
-      : true;
-
-  deliveryIsOpen = true; // TODO: temp fix
-  // console.log(deliveryIsOpen);
-
   useEffect(() => {
     checkAuth();
   }, [checkAuth]);
 
   const switchComponentToRender = useCallback(() => {
-    switch (loading) {
-      case true:
-        return <Spinner key={1} width={30} height={30} />;
-      case false:
-        if (!isLoggedIn) {
-          return <Login key={2} />;
-        } else {
-          if (!deliveryIsOpen) {
-            return <ClosedMessage key={5} />;
-          } else {
-            if (componentToRender === "raise") {
-              return <CreateDelivery key={3} />;
-            }
-            if (componentToRender === "track") {
-              return <TrackRequest key={4} />;
-            }
-          }
-        }
-        break;
-      default:
-        return <div>Welcome To Digistore Deliveries</div>;
+    if (componentToRender === "landing") {
+      return <Landing key={2} />;
     }
-  }, [componentToRender, deliveryIsOpen, isLoggedIn, loading]);
+    if (componentToRender === "schedule") {
+      return <Schedule key={3} />;
+    }
+    if (componentToRender === "track") {
+      return <TrackRequest key={4} />;
+    }
+  }, [componentToRender]);
 
   return (
     <Sentry.ErrorBoundary fallback={myFallback} showDialog>
@@ -149,7 +123,6 @@ function App() {
           </Header>
         )}
         {switchComponentToRender()}
-        {/* <ComponentToRender width={30} height={30} /> */}
         <Toaster />
       </div>
     </Sentry.ErrorBoundary>
