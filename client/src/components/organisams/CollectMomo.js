@@ -8,7 +8,7 @@ import Select from "../atoms/Select";
 import ButtonSpinner from "../molecules/ButtonSpinner";
 import Label from "../molecules/Label";
 import toast from "react-hot-toast";
-import { capitalize, upperCase } from "lodash";
+import { capitalize, upperCase, pick } from "lodash";
 
 const CollectMomo = ({
   register,
@@ -26,11 +26,12 @@ const CollectMomo = ({
   setProcessError,
 }) => {
   const {
-    state: { user },
-  } = useAuth();
-
-  const {
-    state: { activePayments },
+    state: {
+      activePayments,
+      provider: { providerDetails },
+      clientBookingDetails,
+    },
+    actions: { setClientBookingDetails, setComponentToRender },
   } = useApp();
 
   const [fetchingDeliveryCharge, setFetchingDeliveryCharge] =
@@ -38,30 +39,44 @@ const CollectMomo = ({
   const [deliveryCharge, setDeliveryCharge] = React.useState(0);
   const paymentOption = watch("paymentOption");
 
+  const { testSelection, bookingResponse } = clientBookingDetails;
+
+  console.log(clientBookingDetails);
+
   React.useEffect(() => {
     if (paymentOption) {
-      let { deliveryEstimate } = getValues();
-      deliveryEstimate = JSON.parse(deliveryEstimate);
-
-      const { user_merchant_id } = user;
-
       const data = {
         channel: paymentOption,
-        amount: deliveryEstimate?.price,
-        merchant: user_merchant_id,
+        amount: clientBookingDetails?.bookingResponse["payment-amount"],
+        merchant: providerDetails?.store_merchant,
       };
 
+      console.log({ data });
       (async () => {
         const res = await axios.post("/api/transaction-fees", data);
         const resData = res?.data ?? {};
 
-        // console.log(resData);
-        setDeliveryCharge(resData);
-        setValue("totalAmount", resData);
+        console.log(resData);
+
+        if (Number(resData?.status) === 0) {
+          setClientBookingDetails({
+            transactionChargeDetails: pick(resData, [
+              "amount",
+              "charge",
+              "total",
+              "service",
+            ]),
+          });
+        }
         setFetchingDeliveryCharge(false);
       })();
     }
-  }, [getValues, paymentOption, setValue, user]);
+  }, [
+    clientBookingDetails?.bookingResponse,
+    paymentOption,
+    providerDetails?.store_merchant,
+    setClientBookingDetails,
+  ]);
 
   const onProcessPayment = async (values) => {
     try {
@@ -74,11 +89,11 @@ const CollectMomo = ({
         // payment_type: values?.paymentOption === "VISAG" ? "CARD" : "MOMO",
         payment_number:
           values?.paymentOption === "CASH" || values?.paymentOption === "ACTDBT"
-            ? user?.user_merchant_phone
+            ? providerDetails?.user_merchant_phone
             : values?.momoNumberOrEmailAddress,
         payment_network: values?.paymentOption,
-        mod_by: user?.login,
-        merchant: user?.user_merchant_id,
+        mod_by: "CUSTOMER",
+        merchant: providerDetails?.store_merchant,
       };
 
       // console.log(data);
@@ -138,8 +153,8 @@ const CollectMomo = ({
         service_charge: values?.totalAmount?.charge,
         payment_number: `00000000`,
         payment_network: values?.paymentOption,
-        mod_by: user?.login,
-        merchant: user?.user_merchant_id,
+        mod_by: "CUSTOMER",
+        merchant: providerDetails?.user_merchant_id,
       };
 
       console.log(data);
@@ -224,13 +239,15 @@ const CollectMomo = ({
       <div className="flex flex-col items-center">
         <div className="mb-5">
           <p>
-            Delivery Order No:{" "}
-            <span className="font-bold">{statusText?.order}</span>
+            Payment for:{" "}
+            <span className="font-bold">{testSelection?.product_name}</span>
           </p>
-          {/* <p>
+          <p>
             Payment Invoice No:{" "}
-            <span className="font-bold">{statusText?.invoice}</span>
-          </p> */}
+            <span className="font-bold">
+              {bookingResponse["payment-invoice"]}
+            </span>
+          </p>
         </div>
         <div className="w-10/12">
           <div className="flex flex-col items-center w-full">
@@ -503,33 +520,35 @@ const CollectMomo = ({
           {!fetchingDeliveryCharge && (
             <div className="my-4">
               <p>
-                Your total delivery fee is{" "}
+                Your total fee is{" "}
                 <span className="text-green-500 font-bold">
-                  GHS {deliveryCharge?.total}
+                  GHS {clientBookingDetails?.transactionChargeDetails?.total}
                 </span>
                 .
                 {paymentOption === "VISAG"
                   ? ` You will receive an Email/SMS with a link to complete payment with your VISA or MASTERCARD.`
                   : paymentOption === "CASH"
-                  ? ` Cash Payment of GHS${deliveryCharge?.total} will be taken from customer upon delivery.`
+                  ? ` Cash Payment of GHS${clientBookingDetails?.transactionChargeDetails?.total} will be taken from customer upon delivery.`
                   : paymentOption === "ACTDBT"
-                  ? ` Delivery payment of GHS${deliveryCharge?.total} will be charged to your Digistore Account Wallet`
+                  ? ` Delivery payment of GHS${clientBookingDetails?.transactionChargeDetails?.total} will be charged to your Digistore Account Wallet`
                   : ` You will receive a prompt on the mobile money number provided.
                     Enter your PIN to complete payments.`}
               </p>
             </div>
           )}
 
-          <div className="mt-4 flex justify-center w-full ">
+          <div className="mt-4 flex justify-between w-full ">
             <div className="mr-4">
-              <Button
+              <button
                 disabled={fetching}
-                btnText="Back"
-                btnClasses={
-                  fetching ? `bg-gray-300 text-gray-200` : `bg-black text-white`
-                }
-                onClick={() => setStep(0)}
-              />
+                className="flex items-center"
+                onClick={() => {
+                  setComponentToRender("schedule");
+                }}
+              >
+                <span className="text-2xl font-bold">&#8592; </span>
+                <span> Back</span>
+              </button>
             </div>
             <div className="">
               <ButtonSpinner
@@ -544,6 +563,27 @@ const CollectMomo = ({
               />
             </div>
           </div>
+
+          {/* Section 5 */}
+          {/* <div className="flex w-full justify-between">
+               
+                <button
+                  disabled={loading}
+                  className="px-6 py-2 bg-brandGreen2 text-white shadow rounded"
+                  onClick={handleSubmit(async (values) => {
+                    setClientBookingDetails({
+                      bookingDetails: {
+                        ...values,
+                      },
+                    });
+
+                    await onRaiseOrder(values);
+                  })}
+                >
+                  <span>Continue</span>
+                  <span> &#10140;</span>
+                </button>
+              </div> */}
         </div>
       </div>
     </div>

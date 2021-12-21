@@ -4,7 +4,9 @@ const initialState = {
   appLoading: true,
   outlets: [],
   activePayments: [],
-  componentToRender: "landing",
+  componentToRender: "",
+  clientBookingDetails: {},
+  provider: {},
 };
 
 const AppContext = createContext();
@@ -33,8 +35,22 @@ const AppProvider = ({ children }) => {
           ...state,
           componentToRender: action.payload,
         };
-      // case 'SET_CURRENT_DELIVERY_LOCATION'
-
+      case "CLIENT_BOOKING_DETAILS":
+        return {
+          ...state,
+          clientBookingDetails: {
+            ...state.clientBookingDetails,
+            ...action.payload,
+          },
+        };
+      case "SET_PROVIDER_DETAILS":
+        return {
+          ...state,
+          provider: {
+            ...state.provider,
+            ...action.payload,
+          },
+        };
       default:
         return state;
     }
@@ -64,6 +80,18 @@ const AppProvider = ({ children }) => {
           type: "COMPONENT_TO_RENDER",
           payload,
         }),
+      setClientBookingDetails: (payload) => {
+        dispatch({
+          type: "CLIENT_BOOKING_DETAILS",
+          payload,
+        });
+      },
+      setProviderDetails: (payload) => {
+        dispatch({
+          type: "SET_PROVIDER_DETAILS",
+          payload,
+        });
+      },
     }),
     []
   );

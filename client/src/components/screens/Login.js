@@ -24,7 +24,7 @@ export default function Login() {
     actions: { loginUser },
   } = useAuth();
 
-  const [processing, setProcessing] = React.useState(false);
+  const [processing, setProcessing] = React.useState(false); 
   const [loginError, setLoginError] = React.useState({
     status: false,
     message: "",

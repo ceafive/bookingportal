@@ -11,6 +11,7 @@
     "@sentry/tracing": "^6.11.0",
     "@tailwindcss/forms": "^0.3.3",
     "axios": "^0.21.1",
+    "creditcard.js": "^3.0.13",
     "date-fns": "^2.22.1",
     "lodash": "^4.17.21",
     "material-table": "^1.69.3",

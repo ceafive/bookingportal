@@ -1,18 +1,19 @@
 import { useEffect, useCallback } from "react";
 import Spinner from "./components/atoms/Spinner";
-import CreateDelivery from "./components/screens/CreateDelivery";
-import Login from "./components/screens/Login";
 import { useAuth } from "./ctx/Auth";
-import ClosedMessage from "./components/screens/ClosedMessage";
 import { Toaster } from "react-hot-toast";
 import * as Sentry from "@sentry/react";
 import { useApp } from "./ctx/App";
 import Logo from "./components/atoms/Logo";
 import Header from "./components/molecules/Header";
 import Button from "./components/atoms/Button";
-import TrackRequest from "./components/screens/TrackRequest";
 import Landing from "./components/screens/Landing";
 import Schedule from "./components/screens/Schedule";
+import Book from "./components/screens/Book";
+import Payment from "./components/screens/Payment";
+import BookingConfirm from "./components/screens/BookingConfirm";
+import axios from "axios";
+import { isEmpty } from "lodash";
 
 function FallbackComponent() {
   return (
@@ -33,28 +34,123 @@ const myFallback = <FallbackComponent />;
 
 function App() {
   const {
-    state: { isLoggedIn, loading, user, showHeader },
-    actions: { checkAuth, logoutUser },
+    state: { user, showHeader },
+    actions: { logoutUser },
   } = useAuth();
 
   const {
-    state: { componentToRender },
-    actions: { setComponentToRender },
+    state: { componentToRender, provider },
+    actions: { setComponentToRender, setProviderDetails },
   } = useApp();
 
+  function getParameterByName(name, url = window.location.href) {
+    name = name.replace(/[[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+      results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return "";
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+  }
+
   useEffect(() => {
-    checkAuth();
-  }, [checkAuth]);
+    var providerName = getParameterByName("provider");
+    if (!providerName) {
+      return setComponentToRender(null);
+    }
+
+    (async () => {
+      const resProvider = await axios.post("/api/provider-details", {
+        name: providerName,
+      });
+      const resProviderData = resProvider?.data ?? {};
+
+      if (Number(resProviderData?.status) !== 0) {
+        return setComponentToRender(null);
+      }
+
+      setProviderDetails({
+        providerDetails: resProviderData?.data,
+      });
+
+      const merchantDetailsRes = await axios.post("/api/merchant-details", {
+        merchant: resProviderData?.data?.store_merchant,
+      });
+      const merchantDetailsResData = merchantDetailsRes?.data ?? {};
+
+      if (Number(merchantDetailsResData?.status) === 0) {
+        setProviderDetails({
+          providerMerchantDetails: merchantDetailsResData.data,
+        });
+      }
+
+      const outletsRes = await axios.post("/api/outlets", {
+        merchant: resProviderData?.data?.store_merchant,
+      });
+      const outletsResData = outletsRes?.data ?? [];
+
+      if (Number(outletsResData?.status) === 0) {
+        setProviderDetails({
+          providerOutletDetails: outletsResData?.data,
+        });
+
+        const productsRes = await axios.post("/api/products", {
+          merchant: resProviderData?.data?.store_merchant,
+          outlet: outletsResData?.data[0]?.outlet_id,
+        });
+        const productsResData = productsRes?.data ?? [];
+
+        if (Number(productsResData?.status) === 0) {
+          setProviderDetails({
+            providerProducts: productsResData?.data,
+          });
+        }
+      }
+    })();
+  }, [setComponentToRender, setProviderDetails]);
+
+  useEffect(() => {
+    // all data loaded
+    const {
+      providerDetails,
+      providerOutletDetails,
+      providerProducts,
+      providerMerchantDetails,
+    } = provider;
+
+    // console.log(providerMerchantDetails);
+
+    if (
+      !isEmpty(providerDetails) &&
+      !isEmpty(providerOutletDetails) &&
+      !isEmpty(providerProducts) &&
+      !isEmpty(providerMerchantDetails)
+    ) {
+      setComponentToRender("schedule");
+    }
+  }, [provider, setComponentToRender]);
 
   const switchComponentToRender = useCallback(() => {
+    if (componentToRender === "") {
+      return <Spinner key={1} />;
+    }
     if (componentToRender === "landing") {
       return <Landing key={2} />;
     }
     if (componentToRender === "schedule") {
       return <Schedule key={3} />;
     }
-    if (componentToRender === "track") {
-      return <TrackRequest key={4} />;
+    if (componentToRender === "book") {
+      return <Book key={4} />;
+    }
+    if (componentToRender === "payment") {
+      return <Payment key={5} />;
+    }
+    if (componentToRender === "booking-confirm") {
+      return <BookingConfirm key={6} />;
+    }
+
+    if (componentToRender === null) {
+      return <p>No Provider Found</p>;
     }
   }, [componentToRender]);
 

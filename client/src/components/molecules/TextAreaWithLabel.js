@@ -1,8 +1,8 @@
 import React from "react";
 import { getClassesString } from "../../utils";
-import Input from "../atoms/Input";
+import TextArea from "../atoms/TextArea";
 
-const InputWithLabel = React.forwardRef(
+const TextAreaWithLabel = React.forwardRef(
   ({ labelText = "", labelClasses, inputClasses, ...props }, ref) => {
     return (
       <>
@@ -13,10 +13,10 @@ const InputWithLabel = React.forwardRef(
         >
           {labelText}
         </label>
-        <Input {...props} ref={ref} inputClasses={inputClasses} />
+        <TextArea {...props} ref={ref} inputClasses={inputClasses} />
       </>
     );
   }
 );
 
-export default InputWithLabel;
+export default TextAreaWithLabel;

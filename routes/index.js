@@ -11,10 +11,55 @@ router.post("/login", async function (req, res, next) {
 /* GET outlets */
 router.post("/outlets", async function (req, res, next) {
   const { merchant } = req.body;
+
   return await getHandler(
     req,
     res,
-    `stores/merchant/${merchant}/store/outlets/all/list`
+    // `stores/merchant/${merchant}/store/outlets/all/list`
+    `stores/merchant/${merchant}/store/outlets/mobile/list`
+  );
+});
+
+/* GET provider merchant details*/
+router.post("/merchant-details", async function (req, res, next) {
+  const { merchant } = req.body;
+
+  return await getHandler(
+    req,
+    res,
+    `/merchants/gateway/profile/ID/${merchant}`
+  );
+});
+
+/* GET products*/
+router.post("/products", async function (req, res, next) {
+  const { merchant, outlet } = req.body;
+
+  return await getHandler(
+    req,
+    res,
+    `/stores/merchant/${merchant}/store/outlet/${outlet}/products`
+  );
+});
+
+/* GET orders*/
+router.post("/past-orders", async function (req, res, next) {
+  const { merchant, date } = req.body;
+
+  return await getHandler(
+    req,
+    res,
+    `/orders/bookings/check/slots/${merchant}/${date}`
+  );
+});
+
+/* GET provider details */
+router.post("/provider-details", async function (req, res, next) {
+  const { name } = req.body;
+  return await getHandler(
+    req,
+    res,
+    `/stores/merchant/bookings/online/${name}`
     // `stores/merchant/${merchant}/store/outlets/mobile/list`
   );
 });
@@ -91,7 +136,7 @@ router.post("/customer-details", async function (req, res, next) {
 
 /* POST raise order */
 router.post("/raise-order", async function (req, res, next) {
-  return await postHandler(req, res, `/orders/delivery/process`, req.body);
+  return await postHandler(req, res, `/orders/order/process`, req.body);
 });
 
 /* GET verify transaction */
@@ -122,6 +167,16 @@ router.post("/get-orders", async function (req, res, next) {
     req,
     res,
     `/orders/delivery/process/${merchant}/list/${start_date}/${end_date}`
+  );
+});
+
+/* PoST order history */
+router.post("/cancel-payment", async function (req, res, next) {
+  return await putHandler(
+    req,
+    res,
+    `/paybills/gateway/payment/request`,
+    req.body
   );
 });
 

@@ -23,7 +23,7 @@ const LoginForm = ({
         <div className="w-full mb-3">
           <InputWithLabel
             labelText={"Username"}
-            labelClasses="!capitalize"
+            labelClasses="!capitalize" 
             inputClasses="!pt-2 !p-0 !rounded-none !border-b !border-gray-500 !shadow-none hover:focus:!ring-0"
             {...register("username", {
               required: "Username is required",
