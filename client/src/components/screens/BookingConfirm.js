@@ -35,7 +35,7 @@ const BookingConfirm = () => {
   });
 
   return (
-    <div className="flex flex-col justify-center items-center min-h-screen w-full max-w-7xl">
+    <div className="flex flex-col justify-center items-center w-full max-w-7xl">
       <div className="w-full">
         <div className="flex items-center w-full bg-brandBlue text-white text-xl h-10 pl-2">
           <h1>Booking and Payments System</h1>

@@ -34,26 +34,27 @@ const myFallback = <FallbackComponent />;
 
 function App() {
   const {
-    state: { user, showHeader },
+    state: { user },
     actions: { logoutUser },
   } = useAuth();
 
   const {
-    state: { componentToRender, provider },
-    actions: { setComponentToRender, setProviderDetails },
+    state: {
+      componentToRender,
+      provider,
+      provider: { providerMerchantDetails },
+      showHeader,
+    },
+    actions: { setComponentToRender, setProviderDetails, setShowHeader },
   } = useApp();
 
-  function getParameterByName(name, url = window.location.href) {
-    name = name.replace(/[[\]]/g, "\\$&");
-    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-      results = regex.exec(url);
-    if (!results) return null;
-    if (!results[2]) return "";
-    return decodeURIComponent(results[2].replace(/\+/g, " "));
-  }
+  // console.log(componentToRender);
 
   useEffect(() => {
-    var providerName = getParameterByName("provider");
+    // var providerName = getParameterByName("provider");
+    const providerName = window?.location?.pathname?.substring(1);
+    // console.log({ providerName });
+
     if (!providerName) {
       return setComponentToRender(null);
     }
@@ -117,7 +118,14 @@ function App() {
       providerMerchantDetails,
     } = provider;
 
-    // console.log(providerMerchantDetails);
+    // console.log(providerDetails);
+    console.log(providerMerchantDetails);
+    // console.log(providerProducts);
+    // console.log(providerOutletDetails);
+
+    if (providerDetails && providerDetails?.store_category !== "BOOKINGS") {
+      setComponentToRender(null);
+    }
 
     if (
       !isEmpty(providerDetails) &&
@@ -126,8 +134,9 @@ function App() {
       !isEmpty(providerMerchantDetails)
     ) {
       setComponentToRender("schedule");
+      setShowHeader(true);
     }
-  }, [provider, setComponentToRender]);
+  }, [provider, setComponentToRender, setShowHeader]);
 
   const switchComponentToRender = useCallback(() => {
     if (componentToRender === "") {
@@ -156,67 +165,17 @@ function App() {
 
   return (
     <Sentry.ErrorBoundary fallback={myFallback} showDialog>
-      <div className="flex flex-col justify-center items-center w-full min-h-screen">
+      <div className="flex flex-col items-center w-full pt-5 pb-10">
         {showHeader && (
-          <Header>
-            <div className="h-full">
-              <div className="flex justify-between items-center px-2">
-                <div className="flex items-center">
-                  <div className="w-28">
-                    <Logo className="" />
-                  </div>
-                </div>
-
-                <div className="flex justify-between items-center text-sm">
-                  <div className="flex justify-between items-center mr-2">
-                    <div className="mr-1">
-                      <ion-icon name="person" />
-                    </div>
-                    <h1 className="-mt-1">{user?.user_merchant}</h1>
-                  </div>
-
-                  <div className="flex justify-between items-center">
-                    <div className="mr-1">
-                      <ion-icon name="log-out" />
-                    </div>
-                    <Button
-                      btnText={"Logout"}
-                      btnClasses="!shadow-none !rounded-none !p-0 !-mt-1"
-                      onClick={logoutUser}
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="flex justify-center items-center w-full text-sm mb-2">
-                <div className="w-4/5 sm:w-2/3 flex justify-between items-center">
-                  <button
-                    className={`${
-                      componentToRender === "raise"
-                        ? "bg-gray-800 text-white"
-                        : ""
-                    } rounded px-4 py-1 transition-colors`}
-                    onClick={() => {
-                      setComponentToRender("raise");
-                    }}
-                  >
-                    Raise Delivery
-                  </button>
-                  <button
-                    className={`${
-                      componentToRender === "track"
-                        ? "bg-gray-800 text-white"
-                        : ""
-                    } rounded px-4 py-1  transition-colors`}
-                    onClick={() => {
-                      setComponentToRender("track");
-                    }}
-                  >
-                    Track Deliveries
-                  </button>
-                </div>
-              </div>
+          <div className="px-2">
+            <div className="w-28">
+              <Logo className="" src={providerMerchantDetails?.merchant_logo} />
             </div>
-          </Header>
+
+            <div className="my-1">
+              <h1>{providerMerchantDetails?.merchant_name}</h1>
+            </div>
+          </div>
         )}
         {switchComponentToRender()}
         <Toaster />

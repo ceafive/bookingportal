@@ -131,7 +131,7 @@ router.post("/setup-user-pin", async function (req, res, next) {
 /* GET customer details */
 router.post("/customer-details", async function (req, res, next) {
   const { phone } = req.body;
-  return await getHandler(req, res, `customers/customer/lookups/${phone}`);
+  return await getHandler(req, res, `customers/customer/lookup/${phone}`);
 });
 
 /* POST raise order */

@@ -7,6 +7,7 @@ const initialState = {
   componentToRender: "",
   clientBookingDetails: {},
   provider: {},
+  showHeader: false,
 };
 
 const AppContext = createContext();
@@ -51,6 +52,12 @@ const AppProvider = ({ children }) => {
             ...action.payload,
           },
         };
+
+      case "SHOW_HEADER":
+        return {
+          ...state,
+          showHeader: action.payload,
+        };
       default:
         return state;
     }
@@ -89,6 +96,12 @@ const AppProvider = ({ children }) => {
       setProviderDetails: (payload) => {
         dispatch({
           type: "SET_PROVIDER_DETAILS",
+          payload,
+        });
+      },
+      setShowHeader: (payload) => {
+        dispatch({
+          type: "SHOW_HEADER",
           payload,
         });
       },

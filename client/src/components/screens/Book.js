@@ -31,6 +31,7 @@ const Book = () => {
   } = useForm();
 
   const bookingDate = watch("bookingDate");
+  const watchBookingPhoneNumber = watch("phone", "");
 
   const {
     state: {
@@ -265,7 +266,7 @@ const Book = () => {
         service_charge: 0,
         total_amount: getCartItemsPrice(allItems),
         merchant: providerDetails?.store_merchant,
-        source: "ONLINE",
+        source: "BOOKING",
         mod_by: "CUSTOMER",
         customer: "",
         order_date: values.bookingDate,
@@ -309,8 +310,60 @@ const Book = () => {
     }
   };
 
+  const validate = (dateString) => {
+    const day = new Date(dateString).getDay();
+    if (day === 0) {
+      return false;
+    }
+    return true;
+  };
+
+  const handleBookingDate = (e) => {
+    const value = e.target.value;
+    console.log(value);
+
+    if (!validate(value)) {
+      toast.error("Sorry. We do not work on Sundays");
+      return setValue("bookingDate", "");
+    }
+
+    setValue("bookingDate", value);
+  };
+
+  const bookingDateInput = register("bookingDate", {
+    required: "Booking Date is required",
+  });
+
+  React.useEffect(() => {
+    // console.log(watchBookingPhoneNumber);
+    if (watchBookingPhoneNumber?.length === 10) {
+      (async () => {
+        setLoading(true);
+        const response = await axios.post("/api/customer-details", {
+          phone: watchBookingPhoneNumber,
+        });
+        const responsedata = await response?.data;
+        // console.log(responsedata);
+
+        if (Number(responsedata?.status) === 0) {
+          // console.log("here");
+          setValue(`email`, responsedata?.data?.customer_email || "");
+          setValue(`studentName`, responsedata?.data?.customer_name || "");
+        } else {
+          // console.log("there");
+          setValue(`email`, "");
+          setValue(`fullName`, "");
+        }
+
+        setLoading(false);
+      })();
+    }
+
+    return () => {};
+  }, [setValue, watchBookingPhoneNumber]);
+
   return (
-    <div className="flex flex-col justify-center items-center min-h-screen w-full max-w-7xl">
+    <div className="flex flex-col justify-center items-center w-full max-w-7xl">
       <div className="w-full">
         <div className="flex items-center w-full bg-brandBlue text-white text-xl h-10 pl-2">
           <h1>Booking and Payments System</h1>
@@ -442,9 +495,13 @@ const Book = () => {
                     labelText={"Date of Booking"}
                     labelClasses="!capitalize !text-lg"
                     inputClasses="!border !border-gray-500"
-                    {...register("bookingDate", {
-                      required: "Booking Date is required",
-                    })}
+                    ref={bookingDateInput?.ref}
+                    name={bookingDateInput?.name}
+                    onBlur={bookingDateInput?.onBlur}
+                    value={bookingDateInput?.value}
+                    onChange={(e) => {
+                      handleBookingDate(e);
+                    }}
                     type="date"
                     placeholder="John Doe"
                     min={format(new Date(), "yyyy-MM-dd")}
