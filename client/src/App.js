@@ -118,13 +118,13 @@ function App() {
       providerMerchantDetails,
     } = provider;
 
-    // console.log(providerDetails);
-    console.log(providerMerchantDetails);
+    console.log(providerDetails);
+    // console.log(providerMerchantDetails);
     // console.log(providerProducts);
     // console.log(providerOutletDetails);
 
     if (providerDetails && providerDetails?.store_category !== "BOOKINGS") {
-      setComponentToRender(null);
+      return setComponentToRender(null);
     }
 
     if (
@@ -140,7 +140,11 @@ function App() {
 
   const switchComponentToRender = useCallback(() => {
     if (componentToRender === "") {
-      return <Spinner key={1} />;
+      return (
+        <div className="min-h-screen flex justify-center items-center">
+          <Spinner key={1} />
+        </div>
+      );
     }
     if (componentToRender === "landing") {
       return <Landing key={2} />;
@@ -159,7 +163,11 @@ function App() {
     }
 
     if (componentToRender === null) {
-      return <p>No Provider Found</p>;
+      return (
+        <div className="min-h-screen flex justify-center items-center">
+          <p>No Provider Found</p>
+        </div>
+      );
     }
   }, [componentToRender]);
 
@@ -168,11 +176,11 @@ function App() {
       <div className="flex flex-col items-center w-full pt-5 pb-10">
         {showHeader && (
           <div className="px-2">
-            <div className="w-28">
+            <div className="w-full">
               <Logo className="" src={providerMerchantDetails?.merchant_logo} />
             </div>
 
-            <div className="my-1">
+            <div className="my-1 text-center">
               <h1>{providerMerchantDetails?.merchant_name}</h1>
             </div>
           </div>
