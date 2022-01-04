@@ -128,7 +128,12 @@ const Payment = () => {
         }
       })();
     }
-  }, [paymentOption]);
+  }, [
+    bookingResponse,
+    paymentOption,
+    providerDetails?.store_merchant,
+    setClientBookingDetails,
+  ]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -172,9 +177,9 @@ const Payment = () => {
       const messages = {
         new: `You will be notified via Email/SMS once your payment is confirmed.&nbsp&nbsp<br><br><b>Thank You for using iPay</b>`,
         awaiting_payment: `You will be notified via Email/SMS once your payment is confirmed.&nbsp&nbsp<br><br><b>Thank You for using iPay</b>`,
-        paid: `Payment confirmed successfully for your order.<br>You will receive a confirmation email with your order number shortly&nbsp&nbsp<br><br><b></b>`,
-        failed: `Oops! Payment for your Order request Failed.<br>Order will not be processed.&nbsp&nbsp<br><br><b>Thank You for using iPay</b>`,
-        cancelled: `Oops! Payment for your Order request Cancelled.<br>Order will not be processed.&nbsp&nbsp<br><br><b>Thank You for using iPay</b>`,
+        paid: `Payment confirmed successfully for your booking.<br>You will receive a confirmation Email/SMS with your booking number shortly&nbsp&nbsp<br><br><b></b>`,
+        failed: `Oops! Payment for your booking request Failed.<br>Booking will not be processed.&nbsp&nbsp<br><br><b>Thank You for using iPay</b>`,
+        cancelled: `Oops! Payment for your booking request Cancelled.<br>Booking will not be processed.&nbsp&nbsp<br><br><b>Thank You for using iPay</b>`,
       };
 
       // console.log(Date.now() - firstTimeStarted > statusCheckTotalRunTime);
@@ -184,7 +189,7 @@ const Payment = () => {
           setClientBookingDetails({
             verifyTransactionResponse: {
               errorMessage: messages[message],
-              displayText: "Your Order is pending confirmation.",
+              displayText: "Your booking is pending confirmation.",
               displaySubText: messages[message],
               headerBgColor: "bg-blue-500",
             },
@@ -197,7 +202,7 @@ const Payment = () => {
         setClientBookingDetails({
           verifyTransactionResponse: {
             errorMessage: messages[message],
-            displayText: "Your order is confirmed.",
+            displayText: "Your booking is confirmed.",
             displaySubText: messages[message],
             headerBgColor: "bg-green-500",
           },
@@ -209,7 +214,7 @@ const Payment = () => {
         setClientBookingDetails({
           verifyTransactionResponse: {
             errorMessage: messages[message],
-            displayText: "Your order was not successful.",
+            displayText: "Your booking was not successful.",
             displaySubText: messages[message],
             headerBgColor: "bg-red-500",
           },
@@ -254,9 +259,12 @@ const Payment = () => {
           setLoading(false);
           toast.error(resData?.message);
         } else {
-          toast.success(resData?.message, {
-            duration: 5000,
-          });
+          toast.custom(
+            <div dangerouslySetInnerHTML={{ __html: resData?.message }} />,
+            {
+              duration: 5000,
+            }
+          );
 
           setClientBookingDetails({
             processPaymentData: resData,
@@ -422,17 +430,26 @@ const Payment = () => {
                   <p>
                     Your total fee is{" "}
                     <span className="text-green-500 font-bold">
-                      GHS {transactionChargeDetails?.total}
+                      GHS{" "}
+                      {parseFloat(transactionChargeDetails?.total).toFixed(2)}
                     </span>
                     .
                     {paymentOption === "VISAG"
                       ? ` Enter your details to complete payment with your VISA or MASTERCARD.`
                       : paymentOption === "CASH"
-                      ? ` Cash Payment of GHS${transactionChargeDetails?.total} will be taken from customer upon delivery.`
+                      ? ` Cash Payment of GHS${parseFloat(
+                          transactionChargeDetails?.total
+                        ).toFixed(
+                          2
+                        )} will be taken from customer upon delivery.`
                       : paymentOption === "QRPAY"
                       ? ` Scan the QR code below to complete payment`
                       : paymentOption === "ACTDBT"
-                      ? ` Delivery payment of GHS${transactionChargeDetails?.total} will be charged to your iPay Account Wallet`
+                      ? ` Delivery payment of GHS${parseFloat(
+                          transactionChargeDetails?.total
+                        ).toFixed(
+                          2
+                        )} will be charged to your iPay Account Wallet`
                       : ` You will receive a prompt on the mobile money number provided.
                     Enter your PIN to complete payment.`}
                   </p>
@@ -449,6 +466,14 @@ const Payment = () => {
                         required: {
                           value: paymentOption !== "VISAG" ? true : false,
                           message: `Mobile Number is required`,
+                          min: {
+                            value: 10,
+                            message: "Number must be 10 characters",
+                          },
+                          max: {
+                            value: 10,
+                            message: "Number must be 10 characters",
+                          },
                         },
                       }}
                       render={({ field: { onChange, onBlur, value, ref } }) => (

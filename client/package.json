@@ -1,5 +1,5 @@
 {
-  "name": "digistore-deliveries",
+  "name": "booking-portal",
   "version": "0.1.0",
   "private": true,
   "proxy": "http://localhost:5000",
@@ -25,7 +25,12 @@
     "react-scripts": "4.0.3",
     "react-search-input": "^0.11.3",
     "react-super-responsive-table": "^5.2.0",
-    "tailwind-rn": "^3.0.1"
+    "tailwind-rn": "^3.0.1",
+    "npm-run-all": "^4.1.5",
+    "autoprefixer": "^10.3.1",
+    "postcss": "^8.3.5",
+    "postcss-cli": "^8.3.1",
+    "tailwindcss": "^2.2.5"
   },
   "scripts": {
     "test": "react-scripts test",
@@ -55,11 +60,5 @@
       "last 1 safari version"
     ]
   },
-  "devDependencies": {
-    "npm-run-all": "^4.1.5",
-    "autoprefixer": "^10.3.1",
-    "postcss": "^8.3.5",
-    "postcss-cli": "^8.3.1",
-    "tailwindcss": "^2.2.5"
-  }
+  "devDependencies": {}
 }

@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM node:current-alpine AS base
+FROM node:16.3.0-alpine AS base
 
 
 # set working directory
@@ -22,7 +22,7 @@ RUN npm run build
 #
 #CMD [ "node", "./bin/www" ]
 #
-FROM node:current-alpine
+FROM node:16.3.0-alpine
 #
 # Set environment to production
 ENV NODE_ENV=production
