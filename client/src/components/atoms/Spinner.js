@@ -3,8 +3,8 @@ import Loader from "react-loader-spinner";
 const Spinner = ({
   type = "TailSpin",
   color = "#000",
-  height = 100,
-  width = 100,
+  height = 50,
+  width = 50,
   timeout = 3000000,
 }) => {
   return (

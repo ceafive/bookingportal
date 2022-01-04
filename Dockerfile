@@ -17,11 +17,8 @@ RUN npm install
 #
 # build application for production
 RUN npm run build
-# start application in working directory
-#WORKDIR /app
-#
-#CMD [ "node", "./bin/www" ]
-#
+
+
 FROM node:16.3.0-alpine
 #
 # Set environment to production

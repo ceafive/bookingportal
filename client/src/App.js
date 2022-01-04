@@ -34,11 +34,6 @@ const myFallback = <FallbackComponent />;
 
 function App() {
   const {
-    state: { user },
-    actions: { logoutUser },
-  } = useAuth();
-
-  const {
     state: {
       componentToRender,
       provider,
@@ -118,7 +113,7 @@ function App() {
       providerMerchantDetails,
     } = provider;
 
-    console.log(providerDetails);
+    // console.log(providerDetails);
     // console.log(providerMerchantDetails);
     // console.log(providerProducts);
     // console.log(providerOutletDetails);
@@ -176,7 +171,7 @@ function App() {
       <div className="flex flex-col items-center w-full pt-5 pb-10">
         {showHeader && (
           <div className="px-2">
-            <div className="w-full">
+            <div className="flex justify-center w-full">
               <Logo className="" src={providerMerchantDetails?.merchant_logo} />
             </div>
 

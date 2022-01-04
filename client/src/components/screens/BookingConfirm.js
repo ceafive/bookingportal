@@ -25,14 +25,14 @@ const BookingConfirm = () => {
     actions: { setComponentToRender, setClientBookingDetails },
   } = useApp();
 
-  console.log({
-    bookingPayload,
-    bookingResponse,
-    bookingDetails,
-    transactionChargeDetails,
-    verifyTransactionResponse,
-    testSelection,
-  });
+  // console.log({
+  //   bookingPayload,
+  //   bookingResponse,
+  //   bookingDetails,
+  //   transactionChargeDetails,
+  //   verifyTransactionResponse,
+  //   testSelection,
+  // });
 
   return (
     <div className="flex flex-col justify-center items-center w-full max-w-7xl">

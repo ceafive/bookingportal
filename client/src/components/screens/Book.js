@@ -67,11 +67,11 @@ const Book = () => {
           date: bookingDate,
         });
         const pastOrdersResData = pastOrdersRes?.data ?? {};
-        console.log(pastOrdersResData);
+        // console.log(pastOrdersResData);
 
         if (Number(pastOrdersResData?.status) === 0) {
           const pastOrdersSize = pastOrdersResData?.data?.length;
-          console.log(pastOrdersSize);
+          // console.log(pastOrdersSize);
 
           if (!pastOrdersSize) {
             setTimeSlots(
@@ -273,7 +273,7 @@ const Book = () => {
         order_type: "BOOKING",
       };
 
-      console.log(`payload`, data);
+      // console.log(`payload`, data);
       setClientBookingDetails({
         bookingPayload: {
           ...data,
@@ -320,7 +320,7 @@ const Book = () => {
 
   const handleBookingDate = (e) => {
     const value = e.target.value;
-    console.log(value);
+    // console.log(value);
 
     if (!validate(value)) {
       toast.error("Sorry. We do not work on Sundays");
@@ -433,13 +433,11 @@ const Book = () => {
                       required: "Phone number is required",
                       minLength: {
                         value: 10,
-                        message:
-                          "Phone number must be 10 chars",
+                        message: "Phone number must be 10 chars",
                       },
                       maxLength: {
                         value: 10,
-                        message:
-                          "Phone number must be 10 chars",
+                        message: "Phone number must be 10 chars",
                       },
                     })}
                     type="number"

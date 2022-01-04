@@ -259,7 +259,7 @@ const Payment = () => {
           setLoading(false);
           toast.error(resData?.message);
         } else {
-          toast.custom(
+          toast.success(
             <div dangerouslySetInnerHTML={{ __html: resData?.message }} />,
             {
               duration: 5000,
@@ -468,13 +468,11 @@ const Payment = () => {
                           message: `Mobile Number is required`,
                           minLength: {
                             value: 10,
-                            message:
-                              "Phone number must be 10 chars",
+                            message: "Phone number must be 10 chars",
                           },
                           maxLength: {
                             value: 10,
-                            message:
-                              "Phone number must be 10 chars",
+                            message: "Phone number must be 10 chars",
                           },
                         },
                       }}

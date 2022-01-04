@@ -107,7 +107,7 @@ export const iPayJS = (window) => {
         },
         dataType: "json",
         success: function (data) {
-          if (data.success == false) {
+          if (data.success === false) {
             console.log(
               `ajax call to "https://gw.ipaygh.com/services/cybercards/" + ${_gwref} + "/sign"`,
               data
@@ -212,23 +212,23 @@ export const iPayJS = (window) => {
     };
 
     _gwObject.MessageHandler = function (e) {
-      if (e.data.event_id == "gw_show_overlay") {
+      if (e.data.event_id === "gw_show_overlay") {
         _gwObject.ShowOverlay();
-      } else if (e.data.event_id == "gw_hide_overlay") {
+      } else if (e.data.event_id === "gw_hide_overlay") {
         _gwObject.HideOverlay();
-      } else if (e.data.event_id == "gw_paid") {
+      } else if (e.data.event_id === "gw_paid") {
         _gwObject.HideOverlay();
         _gwObject.PaidEventHandler(e.data);
-      } else if (e.data.event_id == "gw_pay_failed") {
+      } else if (e.data.event_id === "gw_pay_failed") {
         _gwObject.HideOverlay();
         _gwObject.FailedEventHandler(e.data);
-      } else if (e.data.event_id == "gw_pay_unsuccessful") {
+      } else if (e.data.event_id === "gw_pay_unsuccessful") {
         _gwObject.HideOverlay();
         _gwObject.FailedEventHandler(e.data);
-      } else if (e.data.event_id == "gw_pay_unexpected") {
+      } else if (e.data.event_id === "gw_pay_unexpected") {
         _gwObject.HideOverlay();
         _gwObject.FailedEventHandler(e.data);
-      } else if (e.data.event_id == "gw_pay_end") {
+      } else if (e.data.event_id === "gw_pay_end") {
         _gwObject.Close3DsForm();
         _gwObject.ErrorEventHandler(e);
       }
