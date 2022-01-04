@@ -433,11 +433,13 @@ const Book = () => {
                       required: "Phone number is required",
                       minLength: {
                         value: 10,
-                        message: "Phone number must be longer than 10 chars",
+                        message:
+                          "Phone number must be 10 chars",
                       },
                       maxLength: {
                         value: 10,
-                        message: "Phone number must be longer than 10 chars",
+                        message:
+                          "Phone number must be 10 chars",
                       },
                     })}
                     type="number"

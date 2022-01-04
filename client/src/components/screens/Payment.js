@@ -466,13 +466,15 @@ const Payment = () => {
                         required: {
                           value: paymentOption !== "VISAG" ? true : false,
                           message: `Mobile Number is required`,
-                          min: {
+                          minLength: {
                             value: 10,
-                            message: "Number must be 10 characters",
+                            message:
+                              "Phone number must be 10 chars",
                           },
-                          max: {
+                          maxLength: {
                             value: 10,
-                            message: "Number must be 10 characters",
+                            message:
+                              "Phone number must be 10 chars",
                           },
                         },
                       }}
