@@ -14,6 +14,10 @@ module.exports = {
         brandGreen: "#eeefff",
         brandGreen2: "#4AB647",
       },
+      screens: {
+        print: { raw: "print" },
+        // => @media print { ... }
+      },
     },
   },
   variants: {
