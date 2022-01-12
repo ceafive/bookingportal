@@ -72,23 +72,45 @@ const BookingConfirm = () => {
 
             <div className="bg-gray-50 p-3 lg:p-5 border border-gray-200 rounded mt-5">
               <h1>{"Customer Information"}</h1>
-              <div className="flex">
-                <div className="mt-4 w-1/2">
+              <div className="lg:flex">
+                <div className="mt-4 lg:w-1/2">
                   <p className="font-bold text-xs">Contact Information</p>
 
-                  <p className="my-3">{bookingDetails?.email}</p>
+                  <p className="my-3">
+                    <span className="font-bold">Email:</span>{" "}
+                    {bookingDetails?.email}
+                  </p>
+                  <p className="my-3">
+                    <span className="font-bold">Phone Number:</span>{" "}
+                    {bookingDetails?.phone}
+                  </p>
 
                   <div className="p-1">
                     <p className="font-bold text-sm">Client Information</p>
-                    <p className="my-1">{bookingDetails?.studentName}</p>
-                    <p className="my-1">{bookingDetails?.uniName}</p>
-                    <p className="my-1">{bookingDetails?.studentIDNumber}</p>
-                    <p className="my-1">{bookingDetails?.phone}</p>
-                    <p className="my-1">{bookingDetails?.studentRegion}</p>
+                    <p className="my-1">
+                      <span className="font-bold">Name:</span>{" "}
+                      {bookingDetails?.studentName}
+                    </p>
+                    <p className="my-1">
+                      <span className="font-bold">Name of University:</span>{" "}
+                      {bookingDetails?.uniName}
+                    </p>
+                    <p className="my-1">
+                      <span className="font-bold">Student ID Number:</span>{" "}
+                      {bookingDetails?.studentIDNumber}
+                    </p>
+                    <p className="my-1">
+                      <span className="font-bold">Phone Number:</span>{" "}
+                      {bookingDetails?.phone}
+                    </p>
+                    <p className="my-1">
+                      <span className="font-bold">Region of Residence:</span>{" "}
+                      {bookingDetails?.studentRegion}
+                    </p>
                   </div>
                 </div>
 
-                <div className="mt-4 w-1/2">
+                <div className="mt-4 lg:w-1/2">
                   <p className="font-bold text-xs">Payment Method</p>
                   <p className="my-3">
                     {paymentOptions[transactionChargeDetails["service"]]}
@@ -96,14 +118,26 @@ const BookingConfirm = () => {
 
                   <div className="p-1">
                     <p className="font-bold text-sm">Booking Information</p>
-                    <p className="my-1">{bookingResponse["payment-invoice"]}</p>
-                    <p className="my-1">{testSelection?.product_name}</p>
                     <p className="my-1">
+                      {" "}
+                      <span className="font-bold">Invoice Number:</span>{" "}
+                      {bookingResponse["payment-invoice"]}
+                    </p>
+                    <p className="my-1">
+                      {" "}
+                      <span className="font-bold">Name of Test:</span>{" "}
+                      {testSelection?.product_name}
+                    </p>
+                    <p className="my-1">
+                      {" "}
+                      <span className="font-bold">Date/Time:</span>{" "}
                       {bookingDetails?.bookingDate} -{" "}
                       {bookingDetails?.bookingTime}
                     </p>
                     <p className="mt-3 my-1">
-                      {"GHS"} {testSelection?.product_price}
+                      {" "}
+                      <span className="font-bold">Amount:</span> {"GHS"}{" "}
+                      {testSelection?.product_price}
                     </p>
 
                     <div className="flex justify-between items-center mt-4 lg:w-2/3 print:hidden">
@@ -117,21 +151,47 @@ const BookingConfirm = () => {
                           bookingDetails?.phone
                         }&text=${`
                         
-                          Booking Information
-                          ----------------------
-                          Invoice Number: ${bookingResponse["payment-invoice"]}\n\n
-                          Name of Test: ${testSelection?.product_name}\n
-                          Date/Time: ${bookingDetails?.bookingDate} - ${bookingDetails?.bookingTime}\n
-                          Amount: GHS${testSelection?.product_price}\n
+                          Booking Information 
+                          \n
+                          \n
+                          Invoice Number: ${bookingResponse["payment-invoice"]}
+                          \n
+                          \n
+                          Name of Test: ${testSelection?.product_name}
+                          \n
+                          \n
+                          Date/Time: ${bookingDetails?.bookingDate} - ${bookingDetails?.bookingTime}
+                          \n
+                          \n
+                          Amount: GHS${testSelection?.product_price}
+                          \n
+                          \n
+                          \n
+                          \n
+                          \n
+                          \n
 
                           Client Information
-                          ----------------------
-                          Email: ${bookingDetails?.email}\n
-                          Name: ${bookingDetails?.studentName}\n
-                          Name of University: ${bookingDetails?.uniName}\n
-                          Student ID Number: ${bookingDetails?.studentIDNumber}\n
-                          Phone Number: ${bookingDetails?.phone}\n
-                          Region of Residence: ${bookingDetails?.studentRegion}\n
+                          \n
+                          \n
+                          Email: ${bookingDetails?.email}
+                          \n
+                          \n
+                          Name: ${bookingDetails?.studentName}
+                          \n
+                          \n
+                          Name of University: ${bookingDetails?.uniName}
+                          \n
+                          \n
+                          Student ID Number: ${bookingDetails?.studentIDNumber}
+                          \n
+                          \n
+                          Phone Number: ${bookingDetails?.phone}
+                          \n
+                          \n
+                          Region of Residence: ${bookingDetails?.studentRegion}
+                          \n
+                          \n
                         
                         `}`}
                         target="_blank"

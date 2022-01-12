@@ -362,6 +362,8 @@ const Book = () => {
     return () => {};
   }, [setValue, watchBookingPhoneNumber]);
 
+  // console.log(loading);
+
   return (
     <div className="flex flex-col justify-center items-center w-full max-w-7xl">
       <div className="w-full">
@@ -540,7 +542,7 @@ const Book = () => {
                 <button
                   disabled={loading}
                   className={`px-6 py-2 ${
-                    loading ? "bg-brandGreen2" : "bg-gray-300"
+                    !loading ? "bg-brandGreen2" : "bg-gray-300"
                   }  text-white shadow rounded`}
                   onClick={handleSubmit(async (values) => {
                     setClientBookingDetails({

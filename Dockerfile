@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM node:16.3.0-alpine AS base
+FROM node:16-alpine AS base
 
 
 # set working directory
@@ -8,7 +8,7 @@ WORKDIR /app
 RUN mkdir ./client
 #
 # copy required application files
-COPY ./client/ ./client/
+COPY ./client ./client
 #
 # install all needed node module packages for frontend portal
 WORKDIR /app/client
@@ -19,7 +19,7 @@ RUN npm install
 RUN npm run build
 
 
-FROM node:16.3.0-alpine
+FROM node:16-alpine
 #
 # Set environment to production
 ENV NODE_ENV=production
@@ -35,10 +35,10 @@ RUN mkdir ./client/build
 RUN mkdir ./routes
 RUN mkdir ./utils
 #
-COPY --from=0 /app/client/build ./client/build/
-COPY ./bin/ ./bin/
-COPY ./routes/ ./routes/
-COPY ./utils ./utils/
+COPY --from=0 /app/client/build ./client/build
+COPY ./bin ./bin
+COPY ./routes ./routes
+COPY ./utils ./utils
 #
 COPY ./app.js .
 COPY ./favicon.ico .

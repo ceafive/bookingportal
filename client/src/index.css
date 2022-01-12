@@ -1359,6 +1359,10 @@ video {
     width: 33.333333%;
   }
 
+  .lg\:w-1\/2{
+    width: 50%;
+  }
+
   .lg\:justify-between{
     justify-content: space-between;
   }

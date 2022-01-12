@@ -79,6 +79,7 @@ const Payment = () => {
   const [showQRCode, setShowQRCode] = useState(false);
   const [processButtonText, setProcessButtonText] = useState("Process Payment");
   const [processButtonAction, setProcessButtonAction] = useState(false);
+  const [verifyTransRounds, setVerifyTransRounds] = useState(0);
 
   React.useEffect(() => {
     const transformed = providerMerchantDetails[`merchant_permissions`]
@@ -195,9 +196,17 @@ const Payment = () => {
               headerBgColor: "bg-blue-500",
             },
           });
-          setLoading(false);
           clearInterval(interval);
-          setComponentToRender("booking-confirm");
+
+          if (verifyTransRounds < 3) {
+            setLoading(false);
+            setProcessButtonText("Confirm");
+            setVerifyTransRounds((data) => data + 1);
+          }
+
+          if (verifyTransRounds === 3) {
+            setComponentToRender("booking-confirm");
+          }
         }
       } else if (message === "paid") {
         setClientBookingDetails({
@@ -805,7 +814,7 @@ const Payment = () => {
                             alt="qr-code"
                           />
                           <p className="p-5 text-sm text-center !text-white bg-brandBlue rounded">
-                            We will automatically confirm payment
+                            Please click on the confirm button to proceed
                           </p>
                         </div>
                       )}
