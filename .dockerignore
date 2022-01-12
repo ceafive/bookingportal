@@ -1,2 +1,10 @@
 booking-portal.tar
-Dockerfile
+Dockerfile*
+.dockerignore
+.env
+.git
+.gitignore
+node_modules
+client/node_modules
+docker*
+# client
