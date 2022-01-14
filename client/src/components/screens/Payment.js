@@ -200,7 +200,7 @@ const Payment = () => {
 
           if (verifyTransRounds < 3) {
             setLoading(false);
-            setProcessButtonText("Confirm");
+            setProcessButtonText("Confirm Payment");
             setVerifyTransRounds((data) => data + 1);
           }
 
@@ -280,7 +280,7 @@ const Payment = () => {
             processPaymentData: resData,
           });
           setProcessButtonAction(true);
-          setProcessButtonText("Confirm");
+          setProcessButtonText("Confirm Payment");
           setLoading(false);
         }
       }
@@ -827,12 +827,12 @@ const Payment = () => {
             </div>
 
             <div className="mt-5">
-              <div className="flex justify-between w-full">
+              <div className="lg:flex justify-between w-full">
                 <button
                   disabled={loading}
                   className={`${
                     loading ? "bg-gray-300" : "bg-red-500"
-                  } capitalize font-medium w-3/12 text-white  py-3 rounded`}
+                  } capitalize font-medium w-full lg:w-3/12 text-white py-3 rounded mb-2 lg:mb-0`}
                   onClick={async () => {
                     await cancelPayment();
                   }}
@@ -844,7 +844,7 @@ const Payment = () => {
                   disabled={loading}
                   className={`${
                     loading ? "bg-gray-300" : "bg-brandGreen2 "
-                  } capitalize font-medium w-8/12 lg:w-1/3 text-white py-3  rounded`}
+                  } capitalize font-medium w-full lg:w-1/3 text-white py-3 rounded`}
                   onClick={handleSubmit(
                     processButtonAction ? startAsyncCheck : onProcessPayment
                   )}

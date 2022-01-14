@@ -76,11 +76,11 @@ const BookingConfirm = () => {
                 <div className="mt-4 lg:w-1/2">
                   <p className="font-bold text-xs">Contact Information</p>
 
-                  <p className="my-3">
+                  <p className="my-1 mt-3">
                     <span className="font-bold">Email:</span>{" "}
                     {bookingDetails?.email}
                   </p>
-                  <p className="my-3">
+                  <p className="my-1 mb-3">
                     <span className="font-bold">Phone Number:</span>{" "}
                     {bookingDetails?.phone}
                   </p>
