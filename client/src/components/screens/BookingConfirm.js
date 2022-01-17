@@ -48,7 +48,7 @@ const BookingConfirm = () => {
         </div>
 
         <div className="px-3 lg:px-32 py-5">
-          <h1 className="text-xl text-brandBlue font-bold">
+          <h1 className="text-xl text-brandBlue font-bold ">
             Booking Confirmation
           </h1>
 
@@ -86,7 +86,7 @@ const BookingConfirm = () => {
                   </p>
 
                   <div className="p-1">
-                    <p className="font-bold text-sm">Client Information</p>
+                    <p className="font-bold text-sm mb-5">Client Information</p>
                     <p className="my-1">
                       <span className="font-bold">Name:</span>{" "}
                       {bookingDetails?.studentName}
@@ -117,7 +117,9 @@ const BookingConfirm = () => {
                   </p>
 
                   <div className="p-1">
-                    <p className="font-bold text-sm">Booking Information</p>
+                    <p className="font-bold text-sm mb-5">
+                      Booking Information
+                    </p>
                     <p className="my-1">
                       {" "}
                       <span className="font-bold">Invoice Number:</span>{" "}
@@ -139,17 +141,24 @@ const BookingConfirm = () => {
                       <span className="font-bold">Amount:</span> {"GHS"}{" "}
                       {testSelection?.product_price}
                     </p>
+                  </div>
+                </div>
+              </div>
 
-                    <div className="flex justify-between items-center mt-4 lg:w-2/3 print:hidden">
-                      <button className={`text-blue-500`} onClick={handlePrint}>
-                        Print
-                      </button>
+              <div className="flex justify-center items-center mt-4 print:hidden">
+                <div className="flex justify-between w-full lg:w-1/3">
+                  <div>
+                    <button className={`text-blue-500`} onClick={handlePrint}>
+                      Print
+                    </button>
+                  </div>
 
-                      <a
-                        // href={`whatsapp://send?abid=&text=Hello%2C%20World!`}
-                        href={`https://api.whatsapp.com/send?phone=233${
-                          bookingDetails?.phone
-                        }&text=${`
+                  <div>
+                    <a
+                      // href={`whatsapp://send?abid=&text=Hello%2C%20World!`}
+                      href={`https://api.whatsapp.com/send?phone=233${
+                        bookingDetails?.phone
+                      }&text=${`
                         
                           Booking Information 
                           \n
@@ -194,13 +203,12 @@ const BookingConfirm = () => {
                           \n
                         
                         `}`}
-                        target="_blank"
-                        rel="noreferrer"
-                        className={`text-blue-500`}
-                      >
-                        Send To Whatsapp
-                      </a>
-                    </div>
+                      target="_blank"
+                      rel="noreferrer"
+                      className={`text-blue-500`}
+                    >
+                      Send To Whatsapp
+                    </a>
                   </div>
                 </div>
               </div>
