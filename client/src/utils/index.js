@@ -252,3 +252,14 @@ function getParameterByName(name, url = window.location.href) {
   if (!results[2]) return "";
   return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
+
+export function getDates(startDate, stopDate) {
+  for (
+    var arr = [], dt = new Date(startDate);
+    dt <= stopDate;
+    dt.setDate(dt.getDate() + 1)
+  ) {
+    arr.push(new Date(dt));
+  }
+  return arr;
+}

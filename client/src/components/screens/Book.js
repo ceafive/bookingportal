@@ -1,28 +1,140 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { useApp } from "../../ctx/App";
-import Button from "../atoms/Button";
 import ErrorMessage from "../atoms/ErrorMessage";
 import Select from "../atoms/Select";
 import InputWithLabel from "../molecules/InputWithLabel";
 import Label from "../molecules/Label";
-import TextAreaWithLabel from "../molecules/TextAreaWithLabel";
 
-import { format } from "date-fns";
+import DayPickerInput from "react-day-picker/DayPickerInput";
+import { DateUtils } from "react-day-picker";
+
 import {
   capitalize,
   isEmpty,
   isEqual,
   pick,
-  replace,
+  flattenDeep,
   uniqueId,
   upperCase,
 } from "lodash";
 import toast from "react-hot-toast";
 
+import dateFnsFormat from "date-fns/format";
+import dateFnsParse from "date-fns/parse";
+import { getDates } from "../../utils";
+
+function parseDate(str, format, locale) {
+  const parsed = dateFnsParse(str, format, new Date(), { locale });
+  if (DateUtils.isDate(parsed)) {
+    return parsed;
+  }
+  return undefined;
+}
+
+function formatDate(date, format, locale) {
+  return dateFnsFormat(date, format, { locale });
+}
+
+const daysOfWeek = {
+  Sunday: 0,
+  Monday: 1,
+  Tuesday: 2,
+  Wednesday: 3,
+  Thursday: 4,
+  Friday: 5,
+  Saturday: 6,
+};
+
+function DatePicker({ control, name }) {
+  const {
+    state: {
+      clientBookingDetails: { testSelection },
+    },
+  } = useApp();
+
+  const FORMAT = "PPPP";
+
+  const bookingDays = JSON.parse(testSelection?.product_booking_days);
+
+  const bookingDates =
+    testSelection?.product_booking_dates ||
+    testSelection?.product_booking_dates?.length
+      ? JSON.parse(testSelection?.product_booking_dates)
+      : [];
+
+  // modifiers
+  const closedDays = bookingDays
+    // ?.filter((v) => false)
+    ?.filter((v) => v?.isClosed)
+    ?.map((v, i) => {
+      return daysOfWeek[v?.day];
+    });
+
+  const allDatesArray = flattenDeep(
+    bookingDates?.map((v) => getDates(new Date(v?.from), new Date(v?.to)))
+  );
+  // console.log(bookingDates);
+  // console.log(allDatesArray);
+
+  const disabledDays = allDatesArray;
+
+  function isDayDisabled(day) {
+    return !disabledDays.some((disabledDay) =>
+      DateUtils.isSameDay(day, disabledDay)
+    );
+  }
+  //
+
+  return (
+    <div>
+      <Controller
+        control={control}
+        name={name}
+        rules={{
+          validate: (value) => Boolean(value) || "Booking date must be entered",
+        }}
+        render={({
+          field: { onChange, onBlur, value, ref },
+          fieldState: { invalid, isTouched, isDirty, error },
+        }) => {
+          return (
+            <>
+              <DayPickerInput
+                ref={ref}
+                value={value}
+                onDayChange={(day) => {
+                  onChange(day);
+                }}
+                formatDate={formatDate}
+                format={FORMAT}
+                parseDate={parseDate}
+                placeholder={`Select a date`}
+                dayPickerProps={{
+                  disabledDays: [
+                    isDayDisabled,
+                    {
+                      before: new Date(),
+                      daysOfWeek: closedDays,
+                    },
+                  ],
+                }}
+                // placeholder={`${dateFnsFormat(new Date(), FORMAT)}`}
+              />
+
+              {/* <p className="text-xs text-red-500">{error?.message}</p> */}
+            </>
+          );
+        }}
+      />
+    </div>
+  );
+}
+
 const Book = () => {
   const {
+    control,
     register,
     handleSubmit,
     setValue,
@@ -50,7 +162,8 @@ const Book = () => {
 
   const [loading, setLoading] = React.useState(false);
 
-  // console.log(providerDetails?.store_booking_slot_qty);
+  // console.log({ bookingDate });
+  // console.log({ testSelection });
 
   React.useEffect(() => {
     if (bookingDate) {
@@ -83,8 +196,8 @@ const Book = () => {
               ].concat(
                 (testSelection?.product_properties || []).map((property) => {
                   return {
-                    name: property?.property_value,
-                    value: property?.property_value,
+                    name: property?.variantOptionValue?.Time,
+                    value: property?.variantOptionValue?.Time,
                   };
                 })
               )
@@ -97,22 +210,26 @@ const Book = () => {
                   value: "",
                 },
               ].concat(
-                (testSelection?.product_properties || [])
+                (testSelection?.product_properties_variants || [])
+                  // (testSelection?.product_properties || [])
                   .map((property) => {
+                    const quantity =
+                      Number(property?.variantOptionBookingSlot) === -99
+                        ? 10000000000000
+                        : Number(property?.variantOptionBookingSlot);
                     const pastOrders = pastOrdersResData?.data;
 
                     const sizeOfPastOrders = pastOrders.filter(
-                      (order) => order?.order_slot === property?.property_value
+                      (order) =>
+                        order?.order_slot === property?.variantOptionValue?.Time
                     )?.length;
 
-                    const isFull =
-                      sizeOfPastOrders >=
-                      Number(providerDetails?.store_booking_slot_qty);
+                    const isFull = sizeOfPastOrders >= quantity;
 
                     if (isFull) return null; // if is full, return null
                     return {
-                      name: property?.property_value,
-                      value: property?.property_value,
+                      name: property?.variantOptionValue?.Time,
+                      value: property?.variantOptionValue?.Time,
                     };
                   })
                   .filter(Boolean) // if is full remove item from array
@@ -273,7 +390,7 @@ const Book = () => {
         order_type: "BOOKING",
       };
 
-      // console.log(`payload`, data);
+      console.log(`payload`, data);
       setClientBookingDetails({
         bookingPayload: {
           ...data,
@@ -281,7 +398,7 @@ const Book = () => {
         },
       });
 
-      // return;
+      return;
 
       const { data: resData } = await axios.post("/api/raise-order", data);
       // console.log(resData);
@@ -330,9 +447,9 @@ const Book = () => {
     setValue("bookingDate", value);
   };
 
-  const bookingDateInput = register("bookingDate", {
-    required: "Booking Date is required",
-  });
+  // const bookingDateInput = register("bookingDate", {
+  //   required: "Booking Date is required",
+  // });
 
   React.useEffect(() => {
     // console.log(watchBookingPhoneNumber);
@@ -471,7 +588,7 @@ const Book = () => {
                     labelClasses="!capitalize !text-lg"
                     inputClasses="!border !border-gray-500"
                     {...register("studentRegion", {
-                      required: "Student region of residence is required",
+                      required: "Region of residence is required",
                     })}
                     type="text"
                     placeholder="Bono"
@@ -493,7 +610,13 @@ const Book = () => {
 
               <div className="lg:flex justify-between w-full mb-3">
                 <div className="lg:w-[48%] mb-3 lg:mb-0">
-                  <InputWithLabel
+                  <label
+                    className={`block text-black font-bold mb-1 !capitalize !text-lg`}
+                  >
+                    {"Date of Booking"}
+                  </label>
+                  <DatePicker control={control} name={"bookingDate"} />
+                  {/* <InputWithLabel
                     labelText={"Date of Booking"}
                     labelClasses="!capitalize !text-lg"
                     inputClasses="!border !border-gray-500"
@@ -507,7 +630,7 @@ const Book = () => {
                     type="date"
                     placeholder="John Doe"
                     min={format(new Date(), "yyyy-MM-dd")}
-                  />
+                  /> */}
                   <ErrorMessage text={errors?.bookingDate?.message} />
                 </div>
 

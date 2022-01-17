@@ -54,6 +54,9 @@ const Schedule = () => {
           <hr className="my-2 border-gray-200 mb-5" />
 
           {providerProducts.map((x, i) => {
+            const bookingDays = JSON.parse(x?.product_booking_days) || [];
+
+            // console.log(bookingDays);
             return (
               <div key={i} className="px-3 lg:px-32 py-3">
                 <div className="bg-gray-100 p-5 rounded">
@@ -76,10 +79,10 @@ const Schedule = () => {
 
                   <div className="lg:flex lg:justify-between mt-3 text-gray-600 ">
                     <div>
-                      {openingDurations.slice(0, 3).map((x, i) => {
+                      {bookingDays.slice(0, 3).map((x, i) => {
                         return (
                           <p key={i}>
-                            {x?.day}: {x?.times}
+                            {x?.day}: {x?.isClosed ? "Closed" : x?.duration}
                           </p>
                         );
                       })}
@@ -87,10 +90,10 @@ const Schedule = () => {
 
                     <div className="lg:flex justify-between items-end">
                       <div className="mr-4">
-                        {openingDurations.slice(3, 6).map((x, i) => {
+                        {bookingDays.slice(3).map((x, i) => {
                           return (
                             <p key={i}>
-                              {x?.day}: {x?.times}
+                              {x?.day}: {x?.isClosed ? "Closed" : x?.duration}
                             </p>
                           );
                         })}

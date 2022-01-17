@@ -7,6 +7,7 @@ import AppProvider from "./ctx/App";
 import * as Sentry from "@sentry/react";
 import { Integrations } from "@sentry/tracing";
 import "react-super-responsive-table/dist/SuperResponsiveTableStyle.css";
+import "react-day-picker/lib/style.css";
 
 Sentry.init({
   dsn: "https://3138a16a9bcf467499b64e7f55d0087d@o934257.ingest.sentry.io/5883682",
