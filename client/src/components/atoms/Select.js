@@ -14,7 +14,12 @@ const Select = React.forwardRef(
         >
           {data.map((option) => {
             return (
-              <option key={option.name} value={option.value} {...option.props}>
+              <option
+                key={option.name}
+                value={option.value}
+                disabled={option?.disabled || false}
+                {...option.props}
+              >
                 {option.name}
               </option>
             );

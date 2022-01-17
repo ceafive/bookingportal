@@ -56,21 +56,18 @@ function DatePicker({ control, name }) {
 
   const FORMAT = "PPPP";
 
-  const bookingDays = JSON.parse(testSelection?.product_booking_days);
-
-  const bookingDates =
-    testSelection?.product_booking_dates ||
-    testSelection?.product_booking_dates?.length
-      ? JSON.parse(testSelection?.product_booking_dates)
-      : [];
-
   // modifiers
+  const bookingDays = JSON.parse(testSelection?.product_booking_days);
   const closedDays = bookingDays
     // ?.filter((v) => false)
     ?.filter((v) => v?.isClosed)
     ?.map((v, i) => {
       return daysOfWeek[v?.day];
     });
+
+  const bookingDates = JSON.parse(testSelection?.product_booking_dates)?.length
+    ? JSON.parse(testSelection?.product_booking_dates)
+    : [];
 
   const allDatesArray = flattenDeep(
     bookingDates?.map((v) => getDates(new Date(v?.from), new Date(v?.to)))
@@ -80,12 +77,10 @@ function DatePicker({ control, name }) {
 
   const disabledDays = allDatesArray;
 
-  function isDayDisabled(day) {
-    return !disabledDays.some((disabledDay) =>
-      DateUtils.isSameDay(day, disabledDay)
-    );
-  }
-  //
+  const isDayDisabled = (day) =>
+    !disabledDays.some((disabledDay) => DateUtils.isSameDay(day, disabledDay));
+
+  // console.log(isDayDisabled);
 
   return (
     <div>
@@ -113,7 +108,7 @@ function DatePicker({ control, name }) {
                 placeholder={`Select a date`}
                 dayPickerProps={{
                   disabledDays: [
-                    isDayDisabled,
+                    bookingDates?.length && isDayDisabled,
                     {
                       before: new Date(),
                       daysOfWeek: closedDays,
@@ -163,7 +158,7 @@ const Book = () => {
   const [loading, setLoading] = React.useState(false);
 
   // console.log({ bookingDate });
-  // console.log({ testSelection });
+  // console.log(testSelection?.product_properties_variants);
 
   React.useEffect(() => {
     if (bookingDate) {
@@ -194,12 +189,15 @@ const Book = () => {
                   value: "",
                 },
               ].concat(
-                (testSelection?.product_properties || []).map((property) => {
-                  return {
-                    name: property?.variantOptionValue?.Time,
-                    value: property?.variantOptionValue?.Time,
-                  };
-                })
+                (testSelection?.product_properties_variants || []).map(
+                  (property) => {
+                    return {
+                      disabled: false,
+                      name: property?.variantOptionValue?.Time,
+                      value: property?.variantOptionValue?.Time,
+                    };
+                  }
+                )
               )
             );
           } else {
@@ -226,13 +224,14 @@ const Book = () => {
 
                     const isFull = sizeOfPastOrders >= quantity;
 
-                    if (isFull) return null; // if is full, return null
+                    // if (isFull) return null; // if is full, return null
                     return {
+                      disabled: isFull,
                       name: property?.variantOptionValue?.Time,
                       value: property?.variantOptionValue?.Time,
                     };
                   })
-                  .filter(Boolean) // if is full remove item from array
+                  .filter(Boolean) // if is full remove null from array
               )
             );
           }
@@ -243,9 +242,8 @@ const Book = () => {
     return () => {};
   }, [
     bookingDate,
-    providerDetails?.store_booking_slot_qty,
     providerDetails?.store_merchant,
-    testSelection?.product_properties,
+    testSelection?.product_properties_variants,
   ]);
 
   // console.log(testSelection);
@@ -398,7 +396,7 @@ const Book = () => {
         },
       });
 
-      return;
+      // return;
 
       const { data: resData } = await axios.post("/api/raise-order", data);
       // console.log(resData);
