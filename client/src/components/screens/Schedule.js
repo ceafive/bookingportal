@@ -48,7 +48,7 @@ const Schedule = () => {
 
         <div className="px-3 lg:px-32 py-3">
           <h1 className="text-xl text-brandBlue font-bold">
-            1. Choose Type of Test
+            1. Request a dental scan
           </h1>
 
           <hr className="my-2 border-gray-200 mb-5" />

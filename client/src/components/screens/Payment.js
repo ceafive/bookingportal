@@ -198,13 +198,13 @@ const Payment = () => {
           });
           clearInterval(interval);
 
-          if (verifyTransRounds < 3) {
+          if (verifyTransRounds < 2) {
             setLoading(false);
             setProcessButtonText("Confirm Payment");
             setVerifyTransRounds((data) => data + 1);
           }
 
-          if (verifyTransRounds === 3) {
+          if (verifyTransRounds === 1) {
             setComponentToRender("booking-confirm");
           }
         }
@@ -370,7 +370,7 @@ const Payment = () => {
             }, 10000);
           }
         );
-      }, 2000);
+      }, 1000);
     } else if (paymentOption === "QRPAY") {
       setLoading(true);
       setShowQRCode(true);
@@ -380,7 +380,7 @@ const Payment = () => {
         var interval = setInterval(() => {
           verifyTransaction(started, interval);
         }, 10000);
-      }, 5000);
+      }, 1000);
     } else {
       setLoading(true);
       setTimeout(() => {
@@ -389,7 +389,7 @@ const Payment = () => {
         var interval = setInterval(() => {
           verifyTransaction(started, interval);
         }, 10000);
-      }, 5000);
+      }, 1000);
     }
   }
 

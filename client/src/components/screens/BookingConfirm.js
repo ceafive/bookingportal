@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 import { useApp } from "../../ctx/App";
 import Button from "../atoms/Button";
 import { useReactToPrint } from "react-to-print";
-
+import { format } from "date-fns";
 const paymentOptions = {
   VISAG: "Visa and Mastercard",
   MTNMM: "MTN Mobile Money",
@@ -133,7 +133,7 @@ const BookingConfirm = () => {
                     <p className="my-1">
                       {" "}
                       <span className="font-bold">Date/Time:</span>{" "}
-                      {bookingDetails?.bookingDate} -{" "}
+                      {format(bookingDetails?.bookingDate, "PPPP")} -{" "}
                       {bookingDetails?.bookingTime}
                     </p>
                     <p className="mt-3 my-1">
@@ -146,14 +146,14 @@ const BookingConfirm = () => {
               </div>
 
               <div className="flex justify-center items-center mt-4 print:hidden">
-                <div className="flex justify-between w-full lg:w-1/3">
-                  <div>
+                <div className="lg:flex text-center justify-between w-full lg:w-1/2">
+                  <div className="my-1">
                     <button className={`text-blue-500`} onClick={handlePrint}>
                       Print
                     </button>
                   </div>
 
-                  <div>
+                  <div className="my-1">
                     <a
                       // href={`whatsapp://send?abid=&text=Hello%2C%20World!`}
                       href={`https://api.whatsapp.com/send?phone=233${
@@ -208,6 +208,17 @@ const BookingConfirm = () => {
                       className={`text-blue-500`}
                     >
                       Send To Whatsapp
+                    </a>
+                  </div>
+
+                  <div className="my-1">
+                    <a
+                      href={`https://www.revealdiagnosticgh.com/visitreveal`}
+                      // target="_blank"
+                      // rel="noreferrer"
+                      className={`text-blue-500`}
+                    >
+                      Return To Website
                     </a>
                   </div>
                 </div>

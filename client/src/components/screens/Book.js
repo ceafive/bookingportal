@@ -155,6 +155,78 @@ const Book = () => {
     },
   ]);
 
+  const [regions] = React.useState([
+    {
+      name: `Select a region`,
+      value: "",
+    },
+    {
+      name: `Ahafo Region`,
+      value: "Ahafo Region",
+    },
+    {
+      name: `Ashanti Region`,
+      value: "Ashanti Region",
+    },
+    {
+      name: `Bono East Region`,
+      value: "Bono East Region",
+    },
+    {
+      name: `Bono Region`,
+      value: "Bono Region",
+    },
+    {
+      name: `Central Region`,
+      value: "Central Region",
+    },
+    {
+      name: `Eastern Region`,
+      value: "Eastern Region",
+    },
+    {
+      name: `Greater Accra Region`,
+      value: "Greater Accra Region",
+    },
+    {
+      name: `North East Region`,
+      value: "North East Region",
+    },
+    {
+      name: `Northern Region`,
+      value: "Northern Region",
+    },
+    {
+      name: `Oti Region`,
+      value: "Oti Region",
+    },
+    {
+      name: `Savannah Region`,
+      value: "Savannah Region",
+    },
+    {
+      name: `Upper East Region`,
+      value: "Upper East Region",
+    },
+    {
+      name: `Upper West Region`,
+      value: "Upper West Region",
+    },
+    {
+      name: `Volta Region`,
+      value: "Volta Region",
+    },
+    {
+      name: `Western North Region`,
+      value: "Western North Region",
+    },
+
+    {
+      name: `Western Region`,
+      value: "Western Region",
+    },
+  ]);
+
   const [loading, setLoading] = React.useState(false);
 
   // console.log({ bookingDate });
@@ -466,8 +538,8 @@ const Book = () => {
           setValue(`studentName`, responsedata?.data?.customer_name || "");
         } else {
           // console.log("there");
-          setValue(`email`, "");
-          setValue(`fullName`, "");
+          // setValue(`email`, "");
+          // setValue(`fullName`, "");
         }
 
         setLoading(false);
@@ -581,7 +653,18 @@ const Book = () => {
               {/* Section 4 */}
               <div className="lg:flex justify-between w-full mb-3">
                 <div className="lg:w-[48%] mb-3 lg:mb-0">
-                  <InputWithLabel
+                  <Label
+                    text="Region of Residence"
+                    labelClasses="!capitalize !text-lg"
+                  />
+                  <Select
+                    selectClasses="px-2"
+                    {...register("studentRegion", {
+                      required: "Region of residence is required",
+                    })}
+                    data={regions}
+                  />
+                  {/* <InputWithLabel
                     labelText={"Region of Residence"}
                     labelClasses="!capitalize !text-lg"
                     inputClasses="!border !border-gray-500"
@@ -590,7 +673,7 @@ const Book = () => {
                     })}
                     type="text"
                     placeholder="Bono"
-                  />
+                  /> */}
                   <ErrorMessage text={errors?.studentRegion?.message} />
                 </div>
 

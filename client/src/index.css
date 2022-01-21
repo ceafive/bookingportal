@@ -1406,6 +1406,10 @@ input, .focus\:ring-1, .focus\:ring-0, .hover\:focus\:\!ring-0{
     width: 25%;
   }
 
+  .lg\:w-auto{
+    width: auto;
+  }
+
   .lg\:justify-between{
     justify-content: space-between;
   }
