@@ -37,7 +37,7 @@ function App() {
     state: {
       componentToRender,
       provider,
-      provider: { providerMerchantDetails },
+      provider: { providerMerchantDetails, providerDetails },
       showHeader,
     },
     actions: { setComponentToRender, setProviderDetails, setShowHeader },
@@ -176,7 +176,7 @@ function App() {
             </div>
 
             <div className="my-1 text-center">
-              <h1>{providerMerchantDetails?.merchant_name}</h1>
+              <h1>{providerDetails?.store_name}</h1>
             </div>
           </div>
         )}

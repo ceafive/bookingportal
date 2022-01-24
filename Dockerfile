@@ -2,7 +2,7 @@
 FROM node:16-alpine AS builder
 WORKDIR /app
 COPY client/package* .
-RUN npx browserslist@latest --update-db && npm install
+RUN npm install
 COPY client .
 RUN  npm run build
 
