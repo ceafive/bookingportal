@@ -630,7 +630,7 @@ const Book = () => {
                       },
                     })}
                     type="number"
-                    placeholder="02444545455"
+                    placeholder="0244454545"
                     min="1"
                   />
                   <ErrorMessage text={errors?.phone?.message} />
@@ -642,6 +642,10 @@ const Book = () => {
                     inputClasses="!border !border-gray-500"
                     {...register("email", {
                       required: "Email is required",
+                      pattern: {
+                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                        message: "Invalid email address",
+                      },
                     })}
                     type="email"
                     placeholder="johndoe@mail.com"
