@@ -15,6 +15,8 @@ import BookingConfirm from "./components/screens/BookingConfirm";
 import axios from "axios";
 import { isEmpty } from "lodash";
 
+import ecobankLogo from "../../assets/Ecobank_Logo_EN.png";
+
 function FallbackComponent() {
   return (
     <div className="flex flex-col justify-center items-center w-full min-h-screen">
@@ -171,8 +173,11 @@ function App() {
       <div className="flex flex-col items-center w-full pt-5 pb-10">
         {showHeader && (
           <div className="px-2">
-            <div className="flex justify-center w-full">
+            <div className="flex justify-between items-center w-full">
               <Logo className="" src={providerMerchantDetails?.merchant_logo} />
+              <div>
+                <img src={ecobankLogo} alt="econbank-logo" />
+              </div>
             </div>
 
             <div className="my-1 text-center">

@@ -7,7 +7,8 @@
     "dev": "npm-run-all --parallel dev:*",
     "dev:client": "cd client && npm run dev",
     "dev:server": "DEBUG=api:server nodemon ./bin/www",
-    "heroku-postbuild": "cd client && npm install && npm install --only=dev --no-shrinkwrap && npm run build"
+    "heroku-postbuild": "cd client && npm install && npm install --only=dev --no-shrinkwrap && npm run build",
+    "docker-build": "docker build --tag booking-portal:latest ."
   },
   "dependencies": {
     "@sentry/node": "^6.10.0",

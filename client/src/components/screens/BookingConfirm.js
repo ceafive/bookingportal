@@ -218,7 +218,7 @@ const BookingConfirm = () => {
                       // rel="noreferrer"
                       className={`text-blue-500`}
                     >
-                      Return To Website
+                      Proceed To Website
                     </a>
                   </div>
                 </div>
