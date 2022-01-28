@@ -172,7 +172,7 @@ function App() {
     <Sentry.ErrorBoundary fallback={myFallback} showDialog>
       <div className="flex flex-col items-center w-full pt-5 pb-10">
         {showHeader && (
-          <div className="px-2 w-full max-w-7xl">
+          <div className="w-full max-w-7xl">
             <div className="flex justify-between items-center w-full">
               <Logo className="" src={providerMerchantDetails?.merchant_logo} />
               <div className="w-[50%]  flex justify-end">
