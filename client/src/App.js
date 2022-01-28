@@ -15,7 +15,7 @@ import BookingConfirm from "./components/screens/BookingConfirm";
 import axios from "axios";
 import { isEmpty } from "lodash";
 
-import ecobankLogo from "../../assets/Ecobank_Logo_EN.png";
+import ecobankLogo from "./assets/Ecobank_Logo_EN.png";
 
 function FallbackComponent() {
   return (
@@ -172,11 +172,15 @@ function App() {
     <Sentry.ErrorBoundary fallback={myFallback} showDialog>
       <div className="flex flex-col items-center w-full pt-5 pb-10">
         {showHeader && (
-          <div className="px-2">
+          <div className="px-2 w-full max-w-7xl">
             <div className="flex justify-between items-center w-full">
               <Logo className="" src={providerMerchantDetails?.merchant_logo} />
-              <div>
-                <img src={ecobankLogo} alt="econbank-logo" />
+              <div className="w-[50%]  flex justify-end">
+                <img
+                  src={ecobankLogo}
+                  className="w-[50%] flex justify-end"
+                  alt="ecobank-logo"
+                />
               </div>
             </div>
 
