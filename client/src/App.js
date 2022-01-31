@@ -174,18 +174,22 @@ function App() {
         {showHeader && (
           <div className="w-full max-w-7xl">
             <div className="flex justify-between items-center w-full">
-              <Logo className="" src={providerMerchantDetails?.merchant_logo} />
-              <div className="w-[50%]  flex justify-end">
+              <div className="flex flex-col items-center">
+                <Logo
+                  className=""
+                  src={providerMerchantDetails?.merchant_logo}
+                />
+                <div className="my-1 text-center">
+                  <h1>{providerDetails?.store_name}</h1>
+                </div>
+              </div>
+              <div className="flex justify-end">
                 <img
                   src={ecobankLogo}
-                  className="w-[50%] flex justify-end"
+                  className="w-[35%] flex justify-end"
                   alt="ecobank-logo"
                 />
               </div>
-            </div>
-
-            <div className="my-1 text-center">
-              <h1>{providerDetails?.store_name}</h1>
             </div>
           </div>
         )}

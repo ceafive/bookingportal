@@ -798,6 +798,14 @@ input, .focus\:ring-1, .focus\:ring-0, .hover\:focus\:\!ring-0{
   height: 3rem;
 }
 
+.h-\[50\%\]{
+  height: 50%;
+}
+
+.h-\[30\%\]{
+  height: 30%;
+}
+
 .max-h-screen{
   max-height: 100vh;
 }
@@ -808,6 +816,10 @@ input, .focus\:ring-1, .focus\:ring-0, .hover\:focus\:\!ring-0{
 
 .w-full{
   width: 100%;
+}
+
+.w-\[50\%\]{
+  width: 50%;
 }
 
 .w-6{
@@ -838,8 +850,12 @@ input, .focus\:ring-1, .focus\:ring-0, .hover\:focus\:\!ring-0{
   width: auto !important;
 }
 
-.w-\[50\%\]{
-  width: 50%;
+.w-\[40\%\]{
+  width: 40%;
+}
+
+.w-\[35\%\]{
+  width: 35%;
 }
 
 .max-w-7xl{
@@ -1033,11 +1049,6 @@ input, .focus\:ring-1, .focus\:ring-0, .hover\:focus\:\!ring-0{
   padding: 0.25rem;
 }
 
-.px-2{
-  padding-left: 0.5rem;
-  padding-right: 0.5rem;
-}
-
 .px-6{
   padding-left: 1.5rem;
   padding-right: 1.5rem;
@@ -1051,6 +1062,11 @@ input, .focus\:ring-1, .focus\:ring-0, .hover\:focus\:\!ring-0{
 .px-3{
   padding-left: 0.75rem;
   padding-right: 0.75rem;
+}
+
+.px-2{
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
 }
 
 .py-1{
