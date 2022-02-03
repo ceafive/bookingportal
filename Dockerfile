@@ -1,7 +1,8 @@
 # syntax=docker/dockerfile:1
 FROM node:16-alpine AS builder
 WORKDIR /app
-COPY client/package* .
+COPY client/package-lock.json .
+COPY client/package.json .
 RUN npm install
 COPY client .
 RUN  npm run build
