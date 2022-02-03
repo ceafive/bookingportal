@@ -11,8 +11,8 @@ RUN  npm run build
 # Prod runner
 FROM node:16-alpine AS runner
 WORKDIR /app
-COPY client/package-lock.json .
-COPY client/package.json .
+COPY package-lock.json .
+COPY package.json .
 RUN npm install --only=production
 COPY . .
 RUN rm -Rf /app/client
