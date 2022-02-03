@@ -1,8 +1,4 @@
 # syntax=docker/dockerfile:1
-
-
-
-
 FROM node:16-alpine AS builder
 WORKDIR /app
 COPY client/package-lock.json .
