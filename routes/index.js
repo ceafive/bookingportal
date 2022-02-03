@@ -74,34 +74,6 @@ router.post("/delivery-charge", async function (req, res, next) {
   );
 });
 
-/* GET delivery charge */
-router.post("/coordinates", async function (req, res, next) {
-  const { deliveryInputValue } = req.body;
-  try {
-    // const iPayResponse = await axios.get(
-    //   `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=${deliveryInputValue.value.description}&inputtype=textquery&fields=geometry&key=AIzaSyCwlbBlciY3kB52y5_h0k4Zxmi8Ho4zK3M`
-    // ); // TODO: old url, sometimes returns not results for some locations
-
-    const location = encodeURIComponent(deliveryInputValue.value.description);
-    const iPayResponse = await axios.get(
-      `https://maps.googleapis.com/maps/api/geocode/json?address=${location}&fields=geometry&region=GH&key=AIzaSyCwlbBlciY3kB52y5_h0k4Zxmi8Ho4zK3M`
-    );
-
-    const iPayData = await iPayResponse.data;
-    return res.status(200).json(iPayData);
-  } catch (error) {
-    let errorResponse = "";
-    if (error.response) {
-      errorResponse = error.response.data;
-    } else if (error.request) {
-      errorResponse = error.request;
-    } else {
-      errorResponse = { error: error.message };
-    }
-    return res.status(400).json(errorResponse);
-  }
-});
-
 /* GET active payments */
 router.post("/active-payments", async function (req, res, next) {
   return await getHandler(req, res, `vendors/payment/services/active`);
