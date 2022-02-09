@@ -227,22 +227,24 @@ const BookingConfirm = () => {
 
             <div className="mt-5 print:hidden">
               <div className="flex justify-center w-full">
-                <button
-                  className={`${"bg-brandGreen2 "} capitalize font-medium w-1/3 text-white py-3 rounded`}
-                  onClick={() => {
-                    setClientBookingDetails({
-                      bookingPayload: {},
-                      bookingResponse: {},
-                      bookingDetails: {},
-                      transactionChargeDetails: {},
-                      verifyTransactionResponse: {},
-                      testSelection: {},
-                    });
-                    setComponentToRender("schedule");
-                  }}
-                >
-                  Done
-                </button>
+                <a href={`https://www.revealdiagnosticgh.com/visitreveal`}>
+                  <button
+                    className={`${"bg-brandGreen2 "} capitalize font-medium w-1/3 text-white py-3 rounded`}
+                    // onClick={() => {
+                    //   setClientBookingDetails({
+                    //     bookingPayload: {},
+                    //     bookingResponse: {},
+                    //     bookingDetails: {},
+                    //     transactionChargeDetails: {},
+                    //     verifyTransactionResponse: {},
+                    //     testSelection: {},
+                    //   });
+                    //   setComponentToRender("schedule");
+                    // }}
+                  >
+                    Done
+                  </button>
+                </a>
               </div>
             </div>
           </div>

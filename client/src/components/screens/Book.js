@@ -20,7 +20,6 @@ import {
   upperCase,
 } from "lodash";
 import toast from "react-hot-toast";
-
 import dateFnsFormat from "date-fns/format";
 import dateFnsParse from "date-fns/parse";
 import { getDates } from "../../utils";
@@ -539,8 +538,12 @@ const Book = () => {
 
         if (Number(responsedata?.status) === 0) {
           // console.log("here");
-          setValue(`email`, responsedata?.data?.customer_email || "");
-          setValue(`studentName`, responsedata?.data?.customer_name || "");
+          if (responsedata?.data?.customer_email) {
+            setValue(`email`, responsedata?.data?.customer_email || "");
+          }
+          if (responsedata?.data?.customer_name) {
+            setValue(`studentName`, responsedata?.data?.customer_name || "");
+          }
         } else {
           // console.log("there");
           // setValue(`email`, "");
