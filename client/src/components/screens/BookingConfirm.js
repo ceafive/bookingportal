@@ -242,7 +242,7 @@ const BookingConfirm = () => {
                     //   setComponentToRender("schedule");
                     // }}
                   >
-                    Done
+                    Proceed
                   </button>
                 </a>
               </div>
