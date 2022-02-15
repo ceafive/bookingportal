@@ -227,7 +227,10 @@ const BookingConfirm = () => {
 
             <div className="mt-5 print:hidden">
               <div className="flex justify-center w-full">
-                <a href={`https://www.revealdiagnosticgh.com/visitreveal`}>
+                <a
+                  href={`https://www.revealdiagnosticgh.com/visitreveal`}
+                  className="w-full flex justify-center"
+                >
                   <button
                     className={`${"bg-brandGreen2 "} capitalize font-medium w-1/3 text-white py-3 rounded`}
                     // onClick={() => {
