@@ -64,7 +64,7 @@ function DatePicker({ control, name }) {
       return daysOfWeek[v?.day];
     });
 
-  console.log(closedDays);
+  // console.log(closedDays);
 
   const bookingDates = JSON.parse(testSelection?.product_booking_dates)?.length
     ? JSON.parse(testSelection?.product_booking_dates)

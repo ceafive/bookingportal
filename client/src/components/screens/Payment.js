@@ -123,6 +123,7 @@ const Payment = () => {
               "charge",
               "total",
               "service",
+              "status",
             ]),
           });
           setFetchingDeliveryCharge(false);
@@ -238,9 +239,12 @@ const Payment = () => {
     }
   };
 
+  // console.log({ transactionChargeDetails });
+
   async function onProcessPayment(values) {
+    // console.log({ paymentOption });
     try {
-      if (transactionChargeDetails?.charge) {
+      if (Number(transactionChargeDetails?.status) === 0) {
         setLoading(true);
         const data = {
           payment_invoice: bookingResponse["payment-invoice"],
@@ -260,9 +264,12 @@ const Payment = () => {
           mod_by: "CUSTOMER",
         };
 
+        // console.log({ data });
+
         // return;
         const res = await axios.post("/api/process-payment", data);
         const resData = res?.data ?? {};
+        // console.log({ resData });
         // return;
 
         if (Number(resData?.status) !== 0) {
@@ -282,6 +289,34 @@ const Payment = () => {
           setProcessButtonAction(true);
           setProcessButtonText("Confirm Payment");
           setLoading(false);
+          if (paymentOption === "VISAG") {
+            window.gw.ShowOverlay = () => {};
+            window.gw.HideOverlay = () => {};
+
+            setTimeout(() => {
+              window.gw.Pay(
+                "cyb_iframe",
+                bookingResponse?.reference,
+                {
+                  cardType: getValues()?.cardType,
+                  cardFirstName: getValues()?.cardFirstName,
+                  cardLastName: getValues()?.cardLastName,
+                  cardNumber: getValues()?.cardNumber,
+                  cardExpiryMonth: getValues()?.cardExpiryMonth,
+                  cardExpiryYear: getValues()?.cardExpiryYear,
+                  cardCVV: getValues()?.cardCVV,
+                },
+                () => {
+                  setLoading(true);
+                  setProcessButtonText("Confirming Payment...");
+                  var started = Date.now();
+                  var interval = setInterval(() => {
+                    verifyTransaction(started, interval);
+                  }, 10000);
+                }
+              );
+            }, 1000);
+          }
         }
       }
     } catch (error) {
@@ -344,33 +379,8 @@ const Payment = () => {
   };
 
   async function startAsyncCheck() {
+    console.log({ paymentOption });
     if (paymentOption === "VISAG") {
-      window.gw.ShowOverlay = () => {};
-      window.gw.HideOverlay = () => {};
-
-      setTimeout(() => {
-        window.gw.Pay(
-          "cyb_iframe",
-          bookingResponse?.reference,
-          {
-            cardType: getValues()?.cardType,
-            cardFirstName: getValues()?.cardFirstName,
-            cardLastName: getValues()?.cardLastName,
-            cardNumber: getValues()?.cardNumber,
-            cardExpiryMonth: getValues()?.cardExpiryMonth,
-            cardExpiryYear: getValues()?.cardExpiryYear,
-            cardCVV: getValues()?.cardCVV,
-          },
-          () => {
-            setLoading(true);
-            setProcessButtonText("Confirming Payment...");
-            var started = Date.now();
-            var interval = setInterval(() => {
-              verifyTransaction(started, interval);
-            }, 10000);
-          }
-        );
-      }, 1000);
     } else if (paymentOption === "QRPAY") {
       setLoading(true);
       setShowQRCode(true);
@@ -392,6 +402,8 @@ const Payment = () => {
       }, 1000);
     }
   }
+
+  // console.log({ loading, processButtonAction });
 
   return (
     <div className="flex flex-col justify-center items-center w-full max-w-7xl">
