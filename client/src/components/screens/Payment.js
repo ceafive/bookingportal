@@ -244,7 +244,8 @@ const Payment = () => {
   async function onProcessPayment(values) {
     // console.log({ paymentOption });
     try {
-      if (Number(transactionChargeDetails?.status) === 0) {
+      if (transactionChargeDetails?.charge) {
+        // if (Number(transactionChargeDetails?.status) === 0) {
         setLoading(true);
         const data = {
           payment_invoice: bookingResponse["payment-invoice"],
@@ -318,6 +319,8 @@ const Payment = () => {
             }, 1000);
           }
         }
+      } else {
+        toast.error("Error fetching charge. Contact the merchant.");
       }
     } catch (error) {
       let errorResponse = "";
